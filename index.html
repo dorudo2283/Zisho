@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>辞書WEB - あなたの知的好奇心を刺激する</title>
+    <title>辞書WEB - ポータル</title>
     <style>
         body { font-family: sans-serif; margin: 0; background: #f7fafc; color: #2d3748; line-height: 1.6; }
-        a { color: #2b6cb0; text-decoration: none; }
         
-        /* 🔔 お知らせバー（最上部で自然に視線に入るナッジ設計） */
+        /* お知らせバー */
         .notice-bar {
             background: #fffaf0; border-bottom: 1px solid #feebc8; color: #dd6b20;
             padding: 10px 20px; text-align: center; font-size: 14px; font-weight: bold;
@@ -19,10 +18,12 @@
             background: linear-gradient(135deg, #1a365d 0%, #2a4365 100%);
             color: white; padding: 40px 20px; text-align: center;
         }
-        .logo-title { font-size: 32px; font-weight: bold; margin-bottom: 20px; letter-spacing: 2px; }
+        /* 💡 ロゴをカーソルがポインターになるようにし、クリック可能に */
+        .logo-title { font-size: 32px; font-weight: bold; margin-bottom: 20px; letter-spacing: 2px; cursor: pointer; display: inline-block; }
+        
         .search-wrapper { max-width: 650px; margin: 0 auto; position: relative; }
         .search-container { display: flex; width: 100%; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-radius: 6px; overflow: hidden; }
-        .search-input { width: 100%; padding: 16px 20px; font-size: 18px; border: none; outline: none; }
+        .search-input { width: 100%; padding: 16px 20px; font-size: 18px; border: none; outline: none; color: #333; }
         .search-btn { padding: 0 30px; background: #ecc94b; color: #1a365d; border: none; cursor: pointer; font-size: 18px; font-weight: bold; }
         .search-btn:hover { background: #f6e05e; }
 
@@ -47,32 +48,25 @@
         .date-badge { background: #dd6b20; color: white; padding: 3px 8px; border-radius: 4px; font-size: 13px; font-weight: bold; margin-right: 10px; }
         .main-word { font-size: 26px; font-weight: bold; color: #dd6b20; margin: 10px 0; }
         
-        /* 🔔 特集リスト（クリックできるカード風にして行動の摩擦を減らす） */
+        /* 特集リスト（純粋な表示用レイアウト） */
         .info-list { list-style: none; padding: 0; margin: 0; }
-        .info-list li { border-bottom: 1px dashed #e2e8f0; }
+        .info-list li { border-bottom: 1px dashed #e2e8f0; padding: 12px 10px; }
         .info-list li:last-child { border-bottom: none; }
-        
-        /* リンク全体を大きなボタンのようにする設定 */
-        .content-link {
-            display: block; padding: 12px 10px; transition: background 0.2s; border-radius: 4px;
-        }
-        .content-link:hover { background: #f7fafc; text-decoration: none; }
-        .content-link:hover .item-title { color: #2b6cb0; text-decoration: underline; }
         
         .item-title { font-weight: bold; color: #2d3748; font-size: 16px; }
         .item-desc { font-size: 13px; color: #718096; margin-top: 4px; }
-        
-        .sub-desc { font-size: 13px; color: #718096; margin-top: 4px; }
+        .sub-desc { font-size: 13px; color: #718096; margin-top: 4px; display: block; }
     </style>
 </head>
 <body>
 
-    <!-- 🔔 お知らせバー -->
+    <!-- お知らせバー -->
     <div class="notice-bar" id="site-notice">📢 お知らせ読み込み中...</div>
 
     <!-- 検索ポータルヘッダー -->
     <div class="top-header">
-        <div class="logo-title">🔍 辞書WEB</div>
+        <!-- 💡 id="logo" を追加してクリック可能に -->
+        <div class="logo-title" id="logo">🔍 辞書WEB</div>
         <div class="search-wrapper">
             <div class="search-container">
                 <input type="text" id="search-word" class="search-input" placeholder="言葉の意味・違い・使い方を検索..." autocomplete="off">
@@ -91,22 +85,22 @@
                 <div class="card-title">
                     <span class="date-badge" id="lbl-date">--月--日</span><span>今日のことば</span>
                 </div>
-                <div class="main-word"><a href="#" id="lnk-today-word">--</a></div>
-                <a href="#" class="sub-desc" style="color: #dd6b20; font-weight: bold;">» 今日のみんなのことばをすべて見る</a>
+                <div class="main-word" id="lbl-today-word" style="color: #dd6b20;">--</div>
+                <div class="sub-desc" style="color: #dd6b20; font-weight: bold;">» 今日のみんなのことばをすべて見る</div>
             </div>
 
             <div class="card">
                 <div class="card-title">🌿 季節のことば</div>
                 <ul class="info-list">
-                    <li style="padding: 12px 10px;">
+                    <li>
                         <strong style="color: #2b6cb0;" id="lbl-sekki">--</strong>
                         <div class="sub-desc" id="desc-sekki">--</div>
                     </li>
-                    <li style="padding: 12px 10px;">
+                    <li>
                         <strong style="color: #2b6cb0;" id="lbl-kou">--</strong>
                         <div class="sub-desc" id="desc-kou">--</div>
                     </li>
-                    <li style="padding: 12px 10px;">
+                    <li>
                         <span id="lbl-stone">--</span>
                     </li>
                 </ul>
@@ -141,13 +135,17 @@
     <script>
         // --- 1. 画面初期化（データの埋め込み） ---
         window.addEventListener('DOMContentLoaded', function() {
+            // 💡 ロゴをクリックしたら再読み込みしてトップに戻る
+            document.getElementById('logo').addEventListener('click', function() {
+                window.location.href = 'index.html';
+            });
+
             // お知らせの埋め込み
             document.getElementById('site-notice').innerText = siteNotice;
 
             // 今日のことばの埋め込み
             document.getElementById('lbl-date').innerText = todayTopics.dateLabel;
-            document.getElementById('lnk-today-word').innerText = todayTopics.todayWord;
-            document.getElementById('lnk-today-word').href = todayTopics.todayWordLink;
+            document.getElementById('lbl-today-word').innerText = todayTopics.todayWord;
             
             document.getElementById('lbl-sekki').innerText = todayTopics.season.sekki;
             document.getElementById('desc-sekki').innerText = todayTopics.season.sekkiDesc;
@@ -155,28 +153,24 @@
             document.getElementById('desc-kou').innerText = todayTopics.season.kouDesc;
             document.getElementById('lbl-stone').innerText = todayTopics.season.stone;
 
-            // 言葉の違いリスト生成（★紹介文が入るようにHTMLを構築）
+            // 言葉の違いリスト生成（リンクなし・表示のみ）
             const diffList = document.getElementById('list-differences');
             wordDifferences.forEach(item => {
                 const li = document.createElement('li');
                 li.innerHTML = `
-                    <a href="${item.link}" class="content-link">
-                        <div class="item-title">» ${item.title}</div>
-                        <div class="item-desc">${item.desc}</div>
-                    </a>
+                    <div class="item-title">» ${item.title}</div>
+                    <div class="item-desc">${item.desc}</div>
                 `;
                 diffList.appendChild(li);
             });
 
-            // 大人の言い回しリスト生成（★紹介文が入るようにHTMLを構築）
+            // 大人の言い回しリスト生成（リンクなし・表示のみ）
             const phraseList = document.getElementById('list-phrases');
             adultPhrases.forEach(item => {
                 const li = document.createElement('li');
                 li.innerHTML = `
-                    <a href="${item.link}" class="content-link">
-                        <div class="item-title">・${item.phrase}</div>
-                        <div class="item-desc">${item.desc}</div>
-                    </a>
+                    <div class="item-title">・${item.phrase}</div>
+                    <div class="item-desc">${item.desc}</div>
                 `;
                 phraseList.appendChild(li);
             });
