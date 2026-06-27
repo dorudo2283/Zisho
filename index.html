@@ -3,223 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3in1 漢字・国語・英和 辞典</title>
+    <title>総合辞典ポータル</title>
     <style>
-        :root {
-            --primary-color: #2c3e50;
-            --accent-color: #3498db;
-            --bg-color: #f8f9fa;
-            --card-bg: #ffffff;
-            --text-color: #333333;
-            --border-radius: 12px;
-            --shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-
-        body {
-            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        h1 {
-            color: var(--primary-color);
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-
-        .search-container {
-            display: flex;
-            gap: 10px;
-            width: 100%;
-            max-width: 600px;
-            margin-bottom: 40px;
-        }
-
-        #search-input {
-            flex: 1;
-            padding: 15px 20px;
-            font-size: 1.2rem;
-            border: 2px solid #ddd;
-            border-radius: var(--border-radius);
-            outline: none;
-            transition: border-color 0.3s;
-        }
-
-        #search-input:focus {
-            border-color: var(--accent-color);
-        }
-
-        button {
-            padding: 15px 30px;
-            font-size: 1.2rem;
-            background-color: var(--accent-color);
-            color: white;
-            border: none;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.3s, transform 0.1s;
-        }
-
-        button:hover {
-            background-color: #2980b9;
-        }
-
-        button:active {
-            transform: scale(0.98);
-        }
-
-        .results-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            width: 100%;
-            max-width: 1200px;
-        }
-
-        .card {
-            background-color: var(--card-bg);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            padding: 25px;
-            border-top: 6px solid var(--primary-color);
-            transition: transform 0.2s;
-        }
-
-        .card:hover {
-            transform: translateY(-2px);
-        }
-
-        .card h2 {
-            margin-top: 0;
-            color: var(--primary-color);
-            border-bottom: 2px solid #eee;
-            padding-bottom: 10px;
-            font-size: 1.5rem;
-        }
-
-        .card-content {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            min-height: 150px;
-        }
-
-        /* 3つのカードごとにテーマカラーを変える演出 */
-        #card-kanji { border-top-color: #e74c3c; }   /* 赤：漢字 */
-        #card-kokugo { border-top-color: #f39c12; }  /* 橙：国語 */
-        #card-eiwa { border-top-color: #2ecc71; }    /* 緑：英和 */
-
-        p {
-            margin: 10px 0;
-        }
+        body { font-family: sans-serif; margin: 20px; background: #f5f5f5; color: #333; }
+        .container { max-width: 500px; margin: 100px auto 0; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: center; }
+        h1 { font-size: 24px; margin-bottom: 20px; color: #0056b3; }
+        input { width: 100%; padding: 12px; font-size: 16px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; margin-bottom: 15px; }
+        button { width: 100%; padding: 12px; font-size: 16px; background: #0056b3; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        button:hover { background: #004085; }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>3in1 漢字・国語・英和 辞典</h1>
-        <p>調べたい単語を入力してください（ひらがな、カタカナ、漢字、英語すべて対応）</p>
-    </header>
+<div class="container">
+    <h1>3部門 総合辞典ポータル</h1>
+    <input type="text" id="keyword" placeholder="調べたい言葉を入力してください...">
+    <button id="searchBtn">検索する</button>
+</div>
 
-    <div class="search-container">
-        <input type="text" id="search-input" placeholder="例: 東京、とうきょう、Apple、アップル...">
-        <button onclick="searchDict()">検索</button>
-    </div>
-
-    <div class="results-grid">
-        <!-- 漢字カード -->
-        <div class="card" id="card-kanji">
-            <h2>漢字辞典</h2>
-            <div class="card-content" id="kanji-result">
-                <p style="color: #888;">ここに検索結果が表示されます</p>
-            </div>
-        </div>
-
-        <!-- 国語カード -->
-        <div class="card" id="card-kokugo">
-            <h2>国語辞典</h2>
-            <div class="card-content" id="kokugo-result">
-                <p style="color: #888;">ここに検索結果が表示されます</p>
-            </div>
-        </div>
-
-        <!-- 英和カード -->
-        <div class="card" id="card-eiwa">
-            <h2>英和辞典</h2>
-            <div class="card-content" id="eiwa-result">
-                <p style="color: #888;">ここに検索結果が表示されます</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- 各データベースファイルの読み込み -->
-    <script src="data-kanji.js"></script>
-    <script src="data-kokugo.js"></script>
-    <script src="data-eiwa.js"></script>
-
-    <script>
-        // エンターキーでも検索できるようにする設定
-        document.getElementById("search-input").addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                searchDict();
-            }
-        });
-
-        // 検索処理メインロジック
-        function searchDict() {
-            const inputElement = document.getElementById("search-input"); 
-            if (!inputElement) return;
-            
-            // 入力された文字の前後の空白を消し、英語は大文字小文字を無視するために小文字化
-            const query = inputElement.value.trim().toLowerCase();
-            if (query === "") {
-                alert("検索ワードを入力してください");
-                return;
-            }
-
-            let targetKey = null;
-
-            // data-kanji.js 内の search 配列をループしてマッチする単語を探す
-            for (let key in dictKanji) {
-                const item = dictKanji[key];
-                
-                // データベース内の検索ワードリストを一つずつ小文字化して、入力文字と完全一致するかチェック
-                const isMatched = item.search && item.search.some(word => word.toLowerCase() === query);
-
-                if (isMatched) {
-                    targetKey = key; // 「東京」や「Apple」といった本来のキーを特定
-                    break;
-                }
-            }
-
-            // 画面の表示エリアを取得
-            const kanjiResult = document.getElementById("kanji-result");
-            const kokugoResult = document.getElementById("kokugo-result");
-            const eiwaResult = document.getElementById("eiwa-result");
-
-            if (targetKey) {
-                // マッチした単語があれば表示（漢字は .html の中身、他2つは前回の文字列データをそのまま表示）
-                kanjiResult.innerHTML = dictKanji[targetKey].html;
-                kokugoResult.innerHTML = dictKokugo[targetKey] || "<p>データがありません</p>";
-                eiwaResult.innerHTML = dictEiwa[targetKey] || "<p>データがありません</p>";
-            } else {
-                // 見つからなかった場合のメッセージ
-                const noMatchMsg = "<p style='color:#e74c3c; font-weight:bold;'>該当する単語はありません</p>";
-                kanjiResult.innerHTML = noMatchMsg;
-                kokugoResult.innerHTML = noMatchMsg;
-                eiwaResult.innerHTML = noMatchMsg;
-            }
+<script>
+    function doSearch() {
+        const val = document.getElementById('keyword').value.trim();
+        if (val) {
+            // list.html へ検索ワードを引き継いで遷移
+            window.location.href = `list.html?q=${encodeURIComponent(val)}`;
         }
-    </script>
+    }
+    document.getElementById('searchBtn').addEventListener('click', doSearch);
+    document.getElementById('keyword').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') doSearch();
+    });
+</script>
+
 </body>
 </html>
