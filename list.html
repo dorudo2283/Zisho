@@ -38,12 +38,11 @@
         .word-name { font-size: 16px; font-weight: bold; color: #0056b3; margin-bottom: 5px; }
         .word-content { font-size: 15px; line-height: 1.5; color: #333; padding-left: 5px; }
         
-        .no-result { color: #888; font-style: italic; text-align: center; padding: 10px 0; }
+        .no-result { color: #cc0000; font-style: italic; text-align: center; padding: 10px 0; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<!-- 上部共通バー -->
 <div class="header-bar">
     <a href="index.html" class="header-title">簡単辞典WEB</a>
     <div class="header-search-container">
@@ -52,13 +51,11 @@
     </div>
 </div>
 
-<!-- メインコンテンツ -->
 <div class="container">
     <h1 id="resultTitle">検索結果</h1>
     <div id="dictionariesContainer"></div>
 </div>
 
-<!-- 既存データベースファイルの読み込み -->
 <script src="data-kanji.js"></script>
 <script src="data-kokugo.js"></script>
 <script src="data-eiwa.js"></script>
@@ -68,16 +65,17 @@
     const params = new URLSearchParams(window.location.search);
     const query = params.get('q') ? params.get('q').trim().toLowerCase() : '';
     
-    // ページ上部の検索入力欄に、現在の検索ワードをあらかじめ入れておく（ユーザビリティ向上）
+    // ページ読み込み時の初期実行
     if (query) {
         document.getElementById('headerKeyword').value = query;
         document.getElementById('resultTitle').innerText = `「${query}」の検索結果`;
         buildDictionaryResults(query);
     } else {
         document.getElementById('resultTitle').innerText = `検索キーワードが空です。`;
+        document.getElementById('dictionariesContainer').innerHTML = `<div class="no-result">キーワードを入力して検索してください。</div>`;
     }
 
-    // 上部バーでの再検索イベント
+    // 上部バーでの再検索イベント（正しくURLを書き換えてリロードする形式にしてフリクションを排除）
     function doReSearch() {
         const val = document.getElementById('headerKeyword').value.trim();
         if (val) {
@@ -92,12 +90,13 @@
     // 辞典ごとの結果画面を組み立てるメインロジック
     function buildDictionaryResults(q) {
         const mainContainer = document.getElementById('dictionariesContainer');
+        mainContainer.innerHTML = ''; // 初期化
         
-        // 3つの辞典を定義
+        // 3つの辞典を安全に定義（データが存在しない場合のフォールバック付き）
         const targetDicts = [
-            { id: 'kanji',  name: '漢字辞典', data: dictKanji },
-            { id: 'kokugo', name: '国語辞典', data: dictKokugo },
-            { id: 'eiwa',   name: '英和辞典', data: dictEiwa }
+            { id: 'kanji',  name: '漢字辞典', data: (typeof dictKanji !== 'undefined') ? dictKanji : {} },
+            { id: 'kokugo', name: '国語辞典', data: (typeof dictKokugo !== 'undefined') ? dictKokugo : {} },
+            { id: 'eiwa',   name: '英和辞典', data: (typeof dictEiwa !== 'undefined') ? dictEiwa : {} }
         ];
 
         targetDicts.forEach(dict => {
@@ -106,27 +105,29 @@
             // 各データベースのキーをループしてマッチする単語を抽出
             Object.keys(dict.data).forEach(key => {
                 let isMatch = false;
+                const itemData = dict.data[key];
                 
-                // 1. 登録単語（キー）自体に部分一致するか
+                // 1. 登録単語（キー：東京、Appleなど）自体に部分一致するか判定
                 if (key.toLowerCase().includes(q)) {
                     isMatch = true;
                 }
                 
-                // 2. 表記揺れ（search配列）が用意されているオブジェクト型の場合、そこにも部分一致するか
-                const itemData = dict.data[key];
-                if (itemData && itemData.search && Array.from(itemData.search).some(s => s.toLowerCase().includes(q))) {
-                    isMatch = true;
+                // 2. 表記揺れ（search配列）が存在する場合の安全な判定
+                if (itemData && itemData.search && Array.isArray(itemData.search)) {
+                    if (itemData.search.some(s => typeof s === 'string' && s.toLowerCase().includes(q))) {
+                        isMatch = true;
+                    }
                 }
 
-                // マッチした場合、表示用HTMLを蓄積
+                // マッチした場合のHTML生成（バグを徹底排除）
                 if (isMatch) {
                     let textBody = '';
                     if (itemData && typeof itemData === 'object' && itemData.html) {
-                        textBody = itemData.html; // 国語・英和の構造用
+                        textBody = itemData.html; // 国語・英和用
                     } else if (typeof itemData === 'string') {
-                        textBody = itemData;       // 漢字辞典の構造用
+                        textBody = itemData;       // 漢字辞典用
                     } else {
-                        textBody = 'データ形式エラー';
+                        textBody = 'データの取得に失敗しました。';
                     }
 
                     htmlContent += `
@@ -138,7 +139,7 @@
                 }
             });
 
-            // 該当データがない場合は「一致なし」のメッセージにする
+            // 該当データがない場合は分かりやすく赤文字で警告
             if (!htmlContent) {
                 htmlContent = `<div class="no-result">「${q}」に該当するデータはありません。</div>`;
             }
