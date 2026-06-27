@@ -7,7 +7,6 @@
     <style>
         body { font-family: sans-serif; margin: 0; background: #f5f7fa; color: #333; }
         
-        /* 上部バー：左中央に大きめの検索窓 */
         .top-bar {
             display: flex;
             align-items: center;
@@ -16,9 +15,11 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         .logo { font-weight: bold; font-size: 22px; margin-right: 40px; color: #2b6cb0; text-decoration: none; }
-        .search-container { flex-grow: 1; max-width: 600px; display: flex; }
         
-        /* 大きめの検索欄（認知的な見つけやすさを重視） */
+        /* 予測変換の枠を正しく配置するためのコンテナ */
+        .search-wrapper { flex-grow: 1; max-width: 600px; position: relative; }
+        .search-container { display: flex; width: 100%; }
+        
         .search-input {
             width: 100%;
             padding: 14px 20px;
@@ -39,6 +40,29 @@
             font-weight: bold;
         }
 
+        /* 🔮 予測変換（サジェスト）ボックスのデザイン */
+        .suggest-box {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: white;
+            border: 1px solid #cbd5e0;
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none; /* 初期は非表示 */
+        }
+        .suggest-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .suggest-item:hover { background: #edf2f7; color: #2b6cb0; }
+
         .main-content { max-width: 800px; margin: 100px auto 0; text-align: center; padding: 0 20px; }
         .main-content h1 { font-size: 36px; color: #2b6cb0; margin-bottom: 10px; }
         .main-content p { color: #718096; font-size: 18px; }
@@ -48,28 +72,80 @@
 
     <div class="top-bar">
         <a href="index.html" class="logo">辞書WEB</a>
-        <div class="search-container">
-            <input type="text" id="search-word" class="search-input" placeholder="言葉を入力（例：東京）...">
-            <button id="search-btn" class="search-btn">検索</button>
+        <div class="search-wrapper">
+            <div class="search-container">
+                <input type="text" id="search-word" class="search-input" placeholder="言葉を入力（例：東京、とうきょう、Tokyo）..." autocomplete="off">
+                <button id="search-btn" class="search-btn">検索</button>
+            </div>
+            <div id="suggest-box" class="suggest-box"></div>
         </div>
     </div>
 
     <div class="main-content">
         <h1>辞書WEB</h1>
-        <p>調べたい言葉を入力すると、3つの辞典の候補が表示されます。</p>
+        <p>文字を入力すると、登録されている言葉の候補が自動で表示されます。</p>
     </div>
 
+    <script src="data-kanji.js"></script>
+    <script src="data-kokugo.js"></script>
+    <script src="data-eiwa.js"></script>
+
     <script>
-        // 検索ボタンまたはEnterキーでlist.htmlに移動する
+        const searchInput = document.getElementById('search-word');
+        const suggestBox = document.getElementById('suggest-box');
+
+        // 3つの辞書データの「全キー（単語）」を1つのリストにまとめる（重複は自動削除）
+        const allWords = Array.from(new Set([
+            ...Object.keys(dictKanji),
+            ...Object.keys(dictKokugo),
+            ...Object.keys(dictEiwa)
+        ]));
+
+        // 文字が入力されたら予測変換を実行
+        searchInput.addEventListener('input', function() {
+            const query = this.value.trim().toLowerCase();
+            suggestBox.innerHTML = ''; // 一度お掃除
+            
+            if (query === '') {
+                suggestBox.style.display = 'none';
+                return;
+            }
+
+            // 入力された文字が含まれる単語をフィルタリング（前方一致や部分一致）
+            const filtered = allWords.filter(word => word.toLowerCase().includes(query));
+
+            if (filtered.length > 0) {
+                filtered.forEach(word => {
+                    const div = document.createElement('div');
+                    div.className = 'suggest-item';
+                    div.innerText = word;
+                    // 候補をクリックしたら、その文字を検索窓に入れて即画面遷移
+                    div.addEventListener('click', function() {
+                        searchInput.value = word;
+                        suggestBox.style.display = 'none';
+                        goToList();
+                    });
+                    suggestBox.appendChild(div);
+                });
+                suggestBox.style.display = 'block';
+            } else {
+                suggestBox.style.display = 'none';
+            }
+        });
+
+        // 画面のどこか別の場所をクリックしたら候補を閉じる（認知的な邪魔を排除）
+        document.addEventListener('click', function(e) {
+            if (e.target !== searchInput) suggestBox.style.display = 'none';
+        });
+
         document.getElementById('search-btn').addEventListener('click', goToList);
-        document.getElementById('search-word').addEventListener('keypress', function(e) {
+        searchInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') goToList();
         });
 
         function goToList() {
-            const word = document.getElementById('search-word').value.trim();
+            const word = searchInput.value.trim();
             if (word !== "") {
-                // URLの末尾に「?word=検索文字」をつけてlist.htmlに飛ばす
                 window.location.href = `list.html?word=${encodeURIComponent(word)}`;
             }
         }
