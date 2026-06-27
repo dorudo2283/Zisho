@@ -7,7 +7,6 @@
     <style>
         body { font-family: sans-serif; margin: 0; background: #f5f7fa; color: #333; }
         
-        /* 上部バー（indexと同じデザインで一貫性を保ち認知負荷を下げる） */
         .top-bar {
             display: flex;
             align-items: center;
@@ -16,7 +15,11 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         .logo { font-weight: bold; font-size: 22px; margin-right: 40px; color: #2b6cb0; text-decoration: none; }
-        .search-container { flex-grow: 1; max-width: 600px; display: flex; }
+        
+        /* 予測変換用のラッパー */
+        .search-wrapper { flex-grow: 1; max-width: 600px; position: relative; }
+        .search-container { display: flex; width: 100%; }
+        
         .search-input {
             width: 100%;
             padding: 14px 20px;
@@ -36,64 +39,55 @@
             font-size: 16px;
         }
 
+        /* 予測変換ボックス（indexと同じ） */
+        .suggest-box {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: white;
+            border: 1px solid #cbd5e0;
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+        }
+        .suggest-item { padding: 12px 20px; cursor: pointer; font-size: 16px; }
+        .suggest-item:hover { background: #edf2f7; color: #2b6cb0; }
+
         .main-content { max-width: 800px; margin: 30px auto; padding: 0 20px; }
         .search-heading { font-size: 20px; margin-bottom: 20px; color: #4a5568; }
         .search-keyword { font-weight: bold; color: #2b6cb0; }
 
-        /* 3つの辞書候補（メニュー） */
         .dict-menu { display: flex; flex-direction: column; gap: 15px; }
-        
-        /* 候補のボタン（押しやすさを意識した大きめサイズ） */
-        .dict-option {
-            background: white;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-        }
+        .dict-option { background: white; border: 2px solid #e2e8f0; border-radius: 8px; overflow: hidden; }
         .dict-trigger {
-            width: 100%;
-            text-align: left;
-            padding: 20px;
-            font-size: 18px;
-            font-weight: bold;
-            background: #fff;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: background 0.2s;
+            width: 100%; text-align: left; padding: 20px; font-size: 18px; font-weight: bold;
+            background: #fff; border: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center;
         }
         .dict-trigger:hover { background: #edf2f7; }
         
-        /* 各辞書のテーマカラーのアクセント */
         .kanji-trigger { color: #e53e3e; border-left: 5px solid #e53e3e; }
         .kokugo-trigger { color: #dd6b20; border-left: 5px solid #dd6b20; }
         .eiwa-trigger { color: #3182ce; border-left: 5px solid #3182ce; }
 
-        /* 中身の表示エリア（最初は非表示） */
-        .dict-content {
-            display: none;
-            padding: 20px;
-            background: #fafbfc;
-            border-top: 1px solid #e2e8f0;
-            font-size: 16px;
-            line-height: 1.6;
-        }
-
-        /* エラー画面 */
+        .dict-content { display: none; padding: 20px; background: #fafbfc; border-top: 1px solid #e2e8f0; font-size: 16px; line-height: 1.6; }
         #not-found { display: none; text-align: center; color: #e53e3e; margin-top: 80px; }
-        #not-found h3 { font-size: 24px; }
     </style>
 </head>
 <body>
 
     <div class="top-bar">
         <a href="index.html" class="logo">辞書WEB</a>
-        <div class="search-container">
-            <input type="text" id="search-word" class="search-input">
-            <button id="search-btn" class="search-btn">検索</button>
+        <div class="search-wrapper">
+            <div class="search-container">
+                <input type="text" id="search-word" class="search-input" autocomplete="off">
+                <button id="search-btn" class="search-btn">検索</button>
+            </div>
+            <div id="suggest-box" class="suggest-box"></div>
         </div>
     </div>
 
@@ -103,21 +97,19 @@
         </div>
 
         <div id="dict-list" class="dict-menu">
-            <div class="dict-option" id="opt-kanji">
+            <div class="dict-option">
                 <button class="dict-trigger kanji-trigger" onclick="toggleDict('content-kanji')">
                     <span>📕 漢字辞典 で見る</span> <span>▼</span>
                 </button>
                 <div id="content-kanji" class="dict-content"></div>
             </div>
-
-            <div class="dict-option" id="opt-kokugo">
+            <div class="dict-option">
                 <button class="dict-trigger kokugo-trigger" onclick="toggleDict('content-kokugo')">
                     <span>📙 国語辞典 で見る</span> <span>▼</span>
                 </button>
                 <div id="content-kokugo" class="dict-content"></div>
             </div>
-
-            <div class="dict-option" id="opt-eiwa">
+            <div class="dict-option">
                 <button class="dict-trigger eiwa-trigger" onclick="toggleDict('content-eiwa')">
                     <span>📘 英和辞典 で見る</span> <span>▼</span>
                 </button>
@@ -136,62 +128,89 @@
     <script src="data-eiwa.js"></script>
 
     <script>
-        // 1. URLから検索クエリ（?word=xxx）を取得する
         const urlParams = new URLSearchParams(window.location.search);
         let currentWord = urlParams.get('word');
 
-        // ページが開かれたときに検索を実行
+        const searchInput = document.getElementById('search-word');
+        const suggestBox = document.getElementById('suggest-box');
+
+        // データの全単語リスト作成
+        const allWords = Array.from(new Set([
+            ...Object.keys(dictKanji),
+            ...Object.keys(dictKokugo),
+            ...Object.keys(dictEiwa)
+        ]));
+
         if (currentWord) {
             currentWord = decodeURIComponent(currentWord);
-            document.getElementById('search-word').value = currentWord;
+            searchInput.value = currentWord;
             document.getElementById('label-word').innerText = currentWord;
             renderResults(currentWord);
         }
 
-        // 2. 検索結果を画面に反映するロジック
         function renderResults(word) {
             const kanjiData = dictKanji[word];
             const kokugoData = dictKokugo[word];
             const eiwaData = dictEiwa[word];
 
-            // 1つでもデータが存在するかチェック
             if (kanjiData || kokugoData || eiwaData) {
                 document.getElementById('dict-list').style.display = 'flex';
                 document.getElementById('not-found').style.display = 'none';
                 document.getElementById('result-header').style.display = 'block';
 
-                // 各辞書の中身をセット（データがない場合は「登録なし」にする）
                 document.getElementById('content-kanji').innerHTML = kanjiData || "<p style='color:#aaa'>この辞典に該当する登録はありません。</p>";
                 document.getElementById('content-kokugo').innerHTML = kokugoData || "<p style='color:#aaa'>この辞典に該当する登録はありません。</p>";
                 document.getElementById('content-eiwa').innerHTML = eiwaData || "<p style='color:#aaa'>この辞典に該当する登録はありません。</p>";
             } else {
-                // データが全くない場合
                 document.getElementById('dict-list').style.display = 'none';
                 document.getElementById('result-header').style.display = 'none';
                 document.getElementById('not-found').style.display = 'block';
             }
         }
 
-        // 3. 候補をクリックしたときに中身を開閉する（段階的開示）
         function toggleDict(id) {
             const content = document.getElementById(id);
-            if (content.style.display === 'block') {
-                content.style.display = 'none';
-            } else {
-                content.style.display = 'block';
-            }
+            content.style.display = (content.style.display === 'block') ? 'none' : 'block';
         }
 
-        // 4. list.html 内の検索窓からでも再検索できるようにする
+        // 🔮 list.html 側の予測変換ロジック
+        searchInput.addEventListener('input', function() {
+            const query = this.value.trim().toLowerCase();
+            suggestBox.innerHTML = '';
+            if (query === '') { suggestBox.style.display = 'none'; return; }
+
+            const filtered = allWords.filter(word => word.toLowerCase().includes(query));
+
+            if (filtered.length > 0) {
+                filtered.forEach(word => {
+                    const div = document.createElement('div');
+                    div.className = 'suggest-item';
+                    div.innerText = word;
+                    div.addEventListener('click', function() {
+                        searchInput.value = word;
+                        suggestBox.style.display = 'none';
+                        reSearch();
+                    });
+                    suggestBox.appendChild(div);
+                });
+                suggestBox.style.display = 'block';
+            } else {
+                suggestBox.style.display = 'none';
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            if (e.target !== searchInput) suggestBox.style.display = 'none';
+        });
+
         document.getElementById('search-btn').addEventListener('click', reSearch);
-        document.getElementById('search-word').addEventListener('keypress', function(e) {
+        searchInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') reSearch();
         });
 
         function reSearch() {
-            const newWord = document.getElementById('search-word').value.trim();
+            const newWord = searchInput.value.trim();
             if (newWord !== "") {
-                // URLを書き換えて再読み込み（リフレッシュ）
                 window.location.href = `list.html?word=${encodeURIComponent(newWord)}`;
             }
         }
