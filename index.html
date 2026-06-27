@@ -3,35 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>総合辞典ポータル</title>
+    <title>簡単辞典WEB - ポータル</title>
     <style>
-        body { font-family: sans-serif; margin: 20px; background: #f5f5f5; color: #333; }
-        .container { max-width: 500px; margin: 100px auto 0; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: center; }
-        h1 { font-size: 24px; margin-bottom: 20px; color: #0056b3; }
-        input { width: 100%; padding: 12px; font-size: 16px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; margin-bottom: 15px; }
-        button { width: 100%; padding: 12px; font-size: 16px; background: #0056b3; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
-        button:hover { background: #004085; }
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; margin: 0; padding: 0; background: #f8f9fa; color: #333; }
+        
+        /* 上部共通バー */
+        .top-bar { display: flex; align-items: center; background: #ffffff; padding: 10px 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 1000; }
+        .site-title { font-size: 20px; font-weight: bold; color: #007bff; text-decoration: none; margin-right: 30px; white-space: nowrap; }
+        .site-title:hover { color: #0056b3; }
+        .top-search-container { flex-grow: 1; max-width: 600px; display: flex; }
+        .top-search-input { width: 100%; padding: 8px 15px; font-size: 14px; border: 1px solid #ced4da; border-radius: 4px 0 0 4px; outline: none; }
+        .top-search-btn { padding: 8px 20px; background: #007bff; color: white; border: none; border-radius: 0 4px 4px 0; cursor: pointer; font-size: 14px; }
+        .top-search-btn:hover { background: #0056b3; }
+
+        /* メインコンテンツ（ポータル専用） */
+        .welcome-container { max-width: 700px; margin: 80px auto 0; text-align: center; padding: 20px; }
+        .main-logo { font-size: 42px; font-weight: 900; color: #007bff; margin-bottom: 10px; letter-spacing: -1px; }
+        .main-sub { color: #6c757d; font-size: 16px; margin-bottom: 35px; }
+        
+        .main-search-box { display: flex; background: #fff; padding: 6px; border-radius: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; }
+        .main-input { flex-grow: 1; border: none; padding: 15px 25px; font-size: 18px; border-radius: 30px 0 0 30px; outline: none; }
+        .main-btn { background: #007bff; color: white; border: none; padding: 0 35px; font-size: 18px; font-weight: bold; border-radius: 30px; cursor: pointer; transition: background 0.2s; }
+        .main-btn:hover { background: #0056b3; }
+        
+        .features { display: flex; justify-content: space-around; margin-top: 60px; }
+        .feature-badge { background: #fff; padding: 15px 25px; border-radius: 8px; font-weight: bold; color: #495057; box-shadow: 0 2px 4px rgba(0,0,0,0.04); border: 1px solid #eed; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>3部門 総合辞典ポータル</h1>
-    <input type="text" id="keyword" placeholder="調べたい言葉を入力してください...">
-    <button id="searchBtn">検索する</button>
+<div class="top-bar">
+    <a href="index.html" class="site-title">簡単辞典WEB</a>
+    <div class="top-search-container">
+        <input type="text" id="topKeyword" class="top-search-input" placeholder="言葉を検索...">
+        <button id="topSearchBtn" class="top-search-btn">検索</button>
+    </div>
+</div>
+
+<div class="welcome-container">
+    <div class="main-logo">簡単辞典WEB</div>
+    <div class="main-sub">漢字・国語・英和の3つのデータベースから一括検索</div>
+    
+    <div class="main-search-box">
+        <input type="text" id="mainKeyword" class="main-input" placeholder="調べたい言葉を入力してください...">
+        <button id="mainSearchBtn" class="main-btn">検索</button>
+    </div>
+
+    <div class="features">
+        <div class="feature-badge" style="border-top: 4px solid #dc3545;">✍️ 漢字辞典</div>
+        <div class="feature-badge" style="border-top: 4px solid #28a745;">📖 国語辞典</div>
+        <div class="feature-badge" style="border-top: 4px solid #ffc107;">🔤 英和辞典</div>
+    </div>
 </div>
 
 <script>
-    function doSearch() {
-        const val = document.getElementById('keyword').value.trim();
+    function executeSearch(keyword) {
+        const val = keyword.trim();
         if (val) {
-            // list.html へ検索ワードを引き継いで遷移
             window.location.href = `list.html?q=${encodeURIComponent(val)}`;
         }
     }
-    document.getElementById('searchBtn').addEventListener('click', doSearch);
-    document.getElementById('keyword').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') doSearch();
+
+    // 上部バーの検索イベント
+    document.getElementById('topSearchBtn').addEventListener('click', () => {
+        executeSearch(document.getElementById('topKeyword').value);
+    });
+    document.getElementById('topKeyword').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') executeSearch(document.getElementById('topKeyword').value);
+    });
+
+    // メイン大検索窓の検索イベント
+    document.getElementById('mainSearchBtn').addEventListener('click', () => {
+        executeSearch(document.getElementById('mainKeyword').value);
+    });
+    document.getElementById('mainKeyword').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') executeSearch(document.getElementById('mainKeyword').value);
     });
 </script>
 
