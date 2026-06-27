@@ -46,8 +46,9 @@
 <div class="header-bar">
     <a href="index.html" class="header-title">簡単辞典WEB</a>
     <div class="header-search-container">
-        <input type="text" id="headerKeyword" class="header-input" placeholder="キーワードを入力...">
+        <input type="text" id="headerKeyword" class="header-input" list="headerSuggestions" placeholder="キーワードを入力...">
         <button id="headerSearchBtn" class="header-btn">検索</button>
+        <datalist id="headerSuggestions"></datalist>
     </div>
 </div>
 
@@ -75,7 +76,7 @@
         document.getElementById('dictionariesContainer').innerHTML = `<div class="no-result">キーワードを入力して検索してください。</div>`;
     }
 
-    // 上部バーでの再検索イベント（正しくURLを書き換えてリロードする形式にしてフリクションを排除）
+    // 上部バーでの再検索イベント
     function doReSearch() {
         const val = document.getElementById('headerKeyword').value.trim();
         if (val) {
@@ -92,7 +93,6 @@
         const mainContainer = document.getElementById('dictionariesContainer');
         mainContainer.innerHTML = ''; // 初期化
         
-        // 3つの辞典を安全に定義（データが存在しない場合のフォールバック付き）
         const targetDicts = [
             { id: 'kanji',  name: '漢字辞典', data: (typeof dictKanji !== 'undefined') ? dictKanji : {} },
             { id: 'kokugo', name: '国語辞典', data: (typeof dictKokugo !== 'undefined') ? dictKokugo : {} },
@@ -102,30 +102,26 @@
         targetDicts.forEach(dict => {
             let htmlContent = '';
             
-            // 各データベースのキーをループしてマッチする単語を抽出
             Object.keys(dict.data).forEach(key => {
                 let isMatch = false;
                 const itemData = dict.data[key];
                 
-                // 1. 登録単語（キー：東京、Appleなど）自体に部分一致するか判定
                 if (key.toLowerCase().includes(q)) {
                     isMatch = true;
                 }
                 
-                // 2. 表記揺れ（search配列）が存在する場合の安全な判定
                 if (itemData && itemData.search && Array.isArray(itemData.search)) {
                     if (itemData.search.some(s => typeof s === 'string' && s.toLowerCase().includes(q))) {
                         isMatch = true;
                     }
                 }
 
-                // マッチした場合のHTML生成（バグを徹底排除）
                 if (isMatch) {
                     let textBody = '';
                     if (itemData && typeof itemData === 'object' && itemData.html) {
-                        textBody = itemData.html; // 国語・英和用
+                        textBody = itemData.html;
                     } else if (typeof itemData === 'string') {
-                        textBody = itemData;       // 漢字辞典用
+                        textBody = itemData;
                     } else {
                         textBody = 'データの取得に失敗しました。';
                     }
@@ -139,12 +135,10 @@
                 }
             });
 
-            // 該当データがない場合は分かりやすく赤文字で警告
             if (!htmlContent) {
                 htmlContent = `<div class="no-result">「${q}」に該当するデータはありません。</div>`;
             }
 
-            // 辞典1つ分のアコーディオンUIを生成
             const dictDiv = document.createElement('div');
             dictDiv.className = 'dict-item';
             dictDiv.innerHTML = `
@@ -152,7 +146,6 @@
                 <div class="dict-body">${htmlContent}</div>
             `;
 
-            // クリックでアコーディオンを単独で開閉するイベントを付与
             dictDiv.querySelector('.dict-header').addEventListener('click', () => {
                 dictDiv.classList.toggle('open');
             });
@@ -160,6 +153,22 @@
             mainContainer.appendChild(dictDiv);
         });
     }
+
+    // 💡 リスト画面の上部検索バー用にもサジェストを設定
+    function initListSearchSuggestions() {
+        const dKanji = (typeof dictKanji !== 'undefined') ? dictKanji : {};
+        const dKokugo = (typeof dictKokugo !== 'undefined') ? dictKokugo : {};
+        const dEiwa = (typeof dictEiwa !== 'undefined') ? dictEiwa : {};
+
+        const allKeys = [...Object.keys(dKanji), ...Object.keys(dKokugo), ...Object.keys(dEiwa)];
+        const uniqueKeywords = Array.from(new Set(allKeys));
+        const optionsHtml = uniqueKeywords.map(word => `<option value="${word}"></option>`).join('');
+
+        const headerList = document.getElementById('headerSuggestions');
+        if (headerList) headerList.innerHTML = optionsHtml;
+    }
+
+    window.addEventListener('DOMContentLoaded', initListSearchSuggestions);
 </script>
 
 </body>
