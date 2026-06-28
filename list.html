@@ -98,6 +98,13 @@
                 const item = dict.data[key];
                 let score = getSimilarityScore(key, q);
 
+                if (typeof item === 'string') {
+                    // dictKanjiの場合
+                    if (score > 0) matches.push({ key, score, textBody: item });
+                    return;
+                }
+
+                // dictKokugo / dictEiwaの場合
                 if (item && item.search && Array.isArray(item.search)) {
                     item.search.forEach(term => {
                         if (typeof term === 'string') {
@@ -107,7 +114,7 @@
                 }
 
                 if (score > 0) {
-                    const textBody = (item && item.html) ? item.html : (typeof item === 'string' ? item : '内容なし');
+                    const textBody = (item && item.html) ? item.html : '内容なし';
                     matches.push({ key, score, textBody });
                 }
             });
@@ -143,14 +150,10 @@
         }
     }
 
-    // ヘッダー検索（list.html内）
+    // ヘッダー検索
     document.getElementById('headerSearchBtn').addEventListener('click', () => executeSearch(document.getElementById('headerKeyword').value));
     document.getElementById('headerKeyword').addEventListener('keypress', (e) => {
         if (e.key === 'Enter') executeSearch(document.getElementById('headerKeyword').value);
-    });
-
-    window.addEventListener('DOMContentLoaded', () => {
-        // サジェストも同様に
     });
 </script>
 
