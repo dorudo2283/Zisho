@@ -5,43 +5,154 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>簡単辞典WEB - 検索結果</title>
     <style>
-        body { font-family: sans-serif; margin: 0; padding: 0; background: #f5f5f5; color: #333; }
+        body { 
+            font-family: sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            background: #f5f5f5; 
+            color: #333; 
+        }
         
         /* 上部共通バー */
-        .header-bar { background: #0056b3; color: white; display: flex; align-items: center; padding: 10px 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
-        .header-title { font-size: 20px; font-weight: bold; text-decoration: none; color: white; margin-right: 30px; }
-        .header-title:hover { opacity: 0.9; }
-        .header-search-container { flex-grow: 1; max-width: 500px; display: flex; position: relative; }
-        /* iOSの自動ズームを防ぐためフォントサイズを16pxに統一 */
-        .header-input { width: 100%; padding: 8px 12px; font-size: 16px; border: none; border-radius: 4px 0 0 4px; outline: none; box-sizing: border-box; }
-        .header-btn { padding: 8px 16px; font-size: 15px; background: #003d82; color: white; border: none; border-radius: 0 4px 4px 0; cursor: pointer; font-weight: bold; }
-        .header-btn:hover { background: #002654; }
+        .header-bar { 
+            background: #0056b3; 
+            color: white; 
+            display: flex; 
+            align-items: center; 
+            padding: 10px 20px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+        }
+        .header-title { 
+            font-size: 20px; 
+            font-weight: bold; 
+            text-decoration: none; 
+            color: white; 
+            margin-right: 20px; 
+            white-space: nowrap;
+        }
+        .header-search-container { 
+            flex-grow: 1; 
+            max-width: 500px; 
+            display: flex; 
+            position: relative; 
+        }
+        .header-input { 
+            width: 100%; 
+            padding: 10px 12px; 
+            font-size: 16px; 
+            border: none; 
+            border-radius: 4px 0 0 4px; 
+            outline: none; 
+            box-sizing: border-box; 
+        }
+        .header-btn { 
+            padding: 10px 20px; 
+            font-size: 15px; 
+            background: #003d82; 
+            color: white; 
+            border: none; 
+            border-radius: 0 4px 4px 0; 
+            cursor: pointer; 
+            font-weight: bold; 
+        }
 
-        /* メインコンテンツエリア */
-        .container { max-width: 600px; margin: 30px auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        h1 { font-size: 18px; margin-top: 0; margin-bottom: 20px; color: #444; border-bottom: 2px solid #ddd; padding-bottom: 10px; }
-        
-        /* 辞典ごとのアコーディオン */
-        .dict-item { border: 1px solid #ddd; border-radius: 6px; margin-bottom: 15px; background: #fff; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        .dict-header { padding: 15px; background: #f8f9fa; cursor: pointer; font-weight: bold; font-size: 16px; display: flex; justify-content: space-between; align-items: center; user-select: none; }
-        .dict-header:hover { background: #f1f3f5; color: #0056b3; }
-        .dict-header::after { content: '▼ 押して開く'; font-size: 12px; color: #888; font-weight: normal; }
-        .dict-item.open .dict-header::after { content: '▲ 閉じる'; }
-        .dict-item.open .dict-header { background: #e9ecef; border-bottom: 1px solid #ddd; }
-        
-        /* 展開される中身エリア */
-        .dict-body { display: none; padding: 20px; background: #fff; }
-        .dict-item.open .dict-body { display: block; }
-        
-        /* 詳細テキスト内の装飾 */
-        .word-block { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px dashed #eee; }
-        .word-block:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
-        .word-name { font-size: 16px; font-weight: bold; color: #0056b3; margin-bottom: 5px; }
-        .word-content { font-size: 15px; line-height: 1.5; color: #333; padding-left: 5px; }
-        
-        .no-result { color: #cc0000; font-style: italic; text-align: center; padding: 10px 0; font-weight: bold; }
+        /* メイン */
+        .container { 
+            max-width: 600px; 
+            margin: 30px auto; 
+            background: white; 
+            padding: 25px; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+        }
+        h1 { 
+            font-size: 20px; 
+            margin-top: 0; 
+            margin-bottom: 25px; 
+            color: #333; 
+            border-bottom: 2px solid #ddd; 
+            padding-bottom: 12px; 
+        }
 
-        /* 💡 カスタムサジェストバー（白色のリスト）のスタイル */
+        /* 辞典アコーディオン */
+        .dict-item { 
+            border: 1px solid #ddd; 
+            border-radius: 6px; 
+            margin-bottom: 15px; 
+            background: #fff; 
+            overflow: hidden; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
+        }
+        .dict-header { 
+            padding: 15px; 
+            background: #f8f9fa; 
+            cursor: pointer; 
+            font-weight: bold; 
+            font-size: 16px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            user-select: none; 
+        }
+        .dict-header:hover { 
+            background: #f1f3f5; 
+            color: #0056b3; 
+        }
+        .dict-header::after { 
+            content: '▼'; 
+            font-size: 14px; 
+            color: #888; 
+        }
+        .dict-item.open .dict-header::after { 
+            content: '▲'; 
+        }
+        .dict-item.open .dict-header { 
+            background: #e9ecef; 
+        }
+        
+        .dict-body { 
+            display: none; 
+            padding: 20px; 
+            background: #fff; 
+            border-top: 1px solid #ddd; 
+        }
+        .dict-item.open .dict-body { 
+            display: block; 
+        }
+
+        .word-block { 
+            margin-bottom: 20px; 
+            padding-bottom: 15px; 
+            border-bottom: 1px dashed #eee; 
+        }
+        .word-block:last-child { 
+            margin-bottom: 0; 
+            padding-bottom: 0; 
+            border-bottom: none; 
+        }
+        .word-name { 
+            font-size: 17px; 
+            font-weight: bold; 
+            color: #0056b3; 
+            margin-bottom: 8px; 
+        }
+        .word-content { 
+            font-size: 15px; 
+            line-height: 1.6; 
+            color: #333; 
+        }
+
+        .no-result { 
+            color: #cc0000; 
+            text-align: center; 
+            padding: 30px 10px; 
+            font-size: 15px; 
+        }
+
+        /* サジェスト */
         .suggest-box {
             position: absolute;
             top: 100%;
@@ -52,7 +163,7 @@
             border-top: none;
             border-radius: 0 0 4px 4px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            max-height: 200px;
+            max-height: 240px;
             overflow-y: auto;
             z-index: 1000;
             display: none;
@@ -65,10 +176,12 @@
             font-size: 16px;
             cursor: pointer;
             border-bottom: 1px solid #eee;
-            color: #333;
         }
         .suggest-box li:last-child { border-bottom: none; }
-        .suggest-box li:hover { background: #f0f5ff; color: #0056b3; }
+        .suggest-box li:hover { 
+            background: #f0f5ff; 
+            color: #0056b3; 
+        }
     </style>
 </head>
 <body>
@@ -92,145 +205,160 @@
 <script src="data-eiwa.js"></script>
 
 <script>
-    // URLから検索ワード(?q=xxx)を取得
     const params = new URLSearchParams(window.location.search);
-    const query = params.get('q') ? params.get('q').trim().toLowerCase() : '';
+    const query = params.get('q') ? params.get('q').trim() : '';
     
-    // ページ読み込み時の初期実行
     if (query) {
         document.getElementById('headerKeyword').value = query;
         document.getElementById('resultTitle').innerText = `「${query}」の検索結果`;
-        buildDictionaryResults(query);
+        buildDictionaryResults(query.toLowerCase());
     } else {
-        document.getElementById('resultTitle').innerText = `検索キーワードが空です。`;
+        document.getElementById('resultTitle').innerText = '検索キーワードがありません';
         document.getElementById('dictionariesContainer').innerHTML = `<div class="no-result">キーワードを入力して検索してください。</div>`;
     }
 
-    // 上部バーでの再検索イベント
-    function doReSearch() {
-        const val = document.getElementById('headerKeyword').value.trim();
+    function executeSearch(value) {
+        const val = value.trim();
         if (val) {
             window.location.href = `list.html?q=${encodeURIComponent(val)}`;
         }
     }
-    document.getElementById('headerSearchBtn').addEventListener('click', doReSearch);
-    document.getElementById('headerKeyword').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') doReSearch();
-    });
 
-    // 辞典ごとの結果画面を組み立てるメインロジック
+    // 簡易類似度スコア
+    function getSimilarityScore(word, q) {
+        const lowerWord = word.toLowerCase();
+        const lowerQ = q.toLowerCase();
+        if (lowerWord === lowerQ) return 1000;
+        if (lowerWord.startsWith(lowerQ)) return 500;
+        if (lowerWord.includes(lowerQ)) return 100 - lowerWord.indexOf(lowerQ);
+        return 0;
+    }
+
     function buildDictionaryResults(q) {
-        const mainContainer = document.getElementById('dictionariesContainer');
-        mainContainer.innerHTML = ''; // 初期化
-        
+        const container = document.getElementById('dictionariesContainer');
+        container.innerHTML = '';
+
         const targetDicts = [
             { id: 'kanji',  name: '漢字辞典', data: (typeof dictKanji !== 'undefined') ? dictKanji : {} },
             { id: 'kokugo', name: '国語辞典', data: (typeof dictKokugo !== 'undefined') ? dictKokugo : {} },
             { id: 'eiwa',   name: '英和辞典', data: (typeof dictEiwa !== 'undefined') ? dictEiwa : {} }
         ];
 
+        let firstOpened = false;
+
         targetDicts.forEach(dict => {
             let htmlContent = '';
-            
+            const matches = [];
+
             Object.keys(dict.data).forEach(key => {
-                let isMatch = false;
-                const itemData = dict.data[key];
-                
-                if (key.toLowerCase().includes(q)) {
-                    isMatch = true;
-                }
-                
-                if (itemData && itemData.search && Array.isArray(itemData.search)) {
-                    if (itemData.search.some(s => typeof s === 'string' && s.toLowerCase().includes(q))) {
-                        isMatch = true;
-                    }
+                const item = dict.data[key];
+                let isMatch = key.toLowerCase().includes(q);
+
+                if (!isMatch && item && item.search && Array.isArray(item.search)) {
+                    isMatch = item.search.some(s => typeof s === 'string' && s.toLowerCase().includes(q));
                 }
 
                 if (isMatch) {
-                    let textBody = '';
-                    if (itemData && typeof itemData === 'object' && itemData.html) {
-                        textBody = itemData.html;
-                    } else if (typeof itemData === 'string') {
-                        textBody = itemData;
-                    } else {
-                        textBody = 'データの取得に失敗しました。';
-                    }
-
-                    htmlContent += `
-                        <div class="word-block">
-                            <div class="word-name">■ ${key}</div>
-                            <div class="word-content">${textBody}</div>
-                        </div>
-                    `;
+                    const textBody = (item && item.html) ? item.html : 
+                                     (typeof item === 'string' ? item : 'データ形式が不明です。');
+                    
+                    matches.push({ key, textBody });
                 }
             });
 
-            if (!htmlContent) {
-                htmlContent = `<div class="no-result">「${q}」に該当するデータはありません。</div>`;
-            }
+            if (matches.length === 0) return; // 該当なしは非表示
+
+            matches.forEach(match => {
+                htmlContent += `
+                    <div class="word-block">
+                        <div class="word-name">■ ${match.key}</div>
+                        <div class="word-content">${match.textBody}</div>
+                    </div>
+                `;
+            });
 
             const dictDiv = document.createElement('div');
             dictDiv.className = 'dict-item';
             dictDiv.innerHTML = `
-                <div class="dict-header">${dict.name}</div>
+                <div class="dict-header">${dict.name} <span style="font-weight:normal; font-size:14px; color:#666;">(${matches.length}件)</span></div>
                 <div class="dict-body">${htmlContent}</div>
             `;
+
+            // 最初の辞典だけ自動で開く
+            if (!firstOpened) {
+                dictDiv.classList.add('open');
+                firstOpened = true;
+            }
 
             dictDiv.querySelector('.dict-header').addEventListener('click', () => {
                 dictDiv.classList.toggle('open');
             });
 
-            mainContainer.appendChild(dictDiv);
+            container.appendChild(dictDiv);
         });
+
+        if (container.children.length === 0) {
+            container.innerHTML = `<div class="no-result">「${query}」に該当する項目はありませんでした。</div>`;
+        }
     }
 
-    // 💡 リスト画面の上部検索バー用カスタムサジェスト制御
-    function initListSearchSuggestions() {
-        const dKanji = (typeof dictKanji !== 'undefined') ? dictKanji : {};
-        const dKokugo = (typeof dictKokugo !== 'undefined') ? dictKokugo : {};
-        const dEiwa = (typeof dictEiwa !== 'undefined') ? dictEiwa : {};
-        const allKeys = [...Object.keys(dKanji), ...Object.keys(dKokugo), ...Object.keys(dEiwa)];
+    // ヘッダー検索イベント
+    document.getElementById('headerSearchBtn').addEventListener('click', () => {
+        executeSearch(document.getElementById('headerKeyword').value);
+    });
+    document.getElementById('headerKeyword').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') executeSearch(document.getElementById('headerKeyword').value);
+    });
+
+    // サジェスト（indexと同じ高機能版）
+    function initSuggestions() {
+        const allKeys = [
+            ...Object.keys((typeof dictKanji !== 'undefined') ? dictKanji : {}),
+            ...Object.keys((typeof dictKokugo !== 'undefined') ? dictKokugo : {}),
+            ...Object.keys((typeof dictEiwa !== 'undefined') ? dictEiwa : {})
+        ];
         const masterKeywords = Array.from(new Set(allKeys));
 
         const inputEl = document.getElementById('headerKeyword');
         const boxEl = document.getElementById('headerSuggestBox');
 
         inputEl.addEventListener('input', () => {
-            const query = inputEl.value.trim().toLowerCase();
+            const q = inputEl.value.trim().toLowerCase();
             boxEl.innerHTML = '';
 
-            if (!query) {
+            if (!q) {
                 boxEl.style.display = 'none';
                 return;
             }
 
-            const matched = masterKeywords.filter(key => key.toLowerCase().includes(query));
+            const matched = masterKeywords
+                .map(word => ({ word, score: getSimilarityScore(word, q) }))
+                .filter(item => item.score > 0)
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 10);
 
-            if (matched.length > 0) {
-                matched.forEach(word => {
-                    const li = document.createElement('li');
-                    li.textContent = word;
-                    li.addEventListener('click', () => {
-                        inputEl.value = word;
-                        boxEl.style.display = 'none';
-                        doReSearch();
-                    });
-                    boxEl.appendChild(li);
+            matched.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item.word;
+                li.addEventListener('click', () => {
+                    inputEl.value = item.word;
+                    boxEl.style.display = 'none';
+                    executeSearch(item.word);
                 });
-                boxEl.style.display = 'block';
-            } else {
-                boxEl.style.display = 'none';
-            }
+                boxEl.appendChild(li);
+            });
+
+            boxEl.style.display = matched.length > 0 ? 'block' : 'none';
         });
 
         document.addEventListener('click', (e) => {
-            if (e.target !== inputEl && e.target !== boxEl) {
+            if (e.target !== inputEl && !boxEl.contains(e.target)) {
                 boxEl.style.display = 'none';
             }
         });
     }
 
-    window.addEventListener('DOMContentLoaded', initListSearchSuggestions);
+    window.addEventListener('DOMContentLoaded', initSuggestions);
 </script>
 
 </body>
