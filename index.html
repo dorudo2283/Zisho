@@ -116,6 +116,7 @@
             font-size: 16px;
             cursor: pointer;
             border-bottom: 1px solid #eee;
+            color: #222;   /* ← ここを強化 */
         }
         .suggest-box li:last-child { border-bottom: none; }
         .suggest-box li:hover { 
@@ -158,11 +159,9 @@
         }
     }
 
-    // 簡易類似度でソート（前方一致を強く優先）
     function getSimilarityScore(word, query) {
         const lowerWord = word.toLowerCase();
         const lowerQuery = query.toLowerCase();
-        
         if (lowerWord === lowerQuery) return 1000;
         if (lowerWord.startsWith(lowerQuery)) return 500;
         if (lowerWord.includes(lowerQuery)) return 100 - lowerWord.indexOf(lowerQuery);
@@ -199,7 +198,7 @@
                 }))
                 .filter(item => item.score > 0)
                 .sort((a, b) => b.score - a.score)
-                .slice(0, 10);  // 最大10件
+                .slice(0, 10);
 
             if (matched.length > 0) {
                 matched.forEach(item => {
@@ -218,7 +217,6 @@
             }
         });
 
-        // 画面外クリックで閉じる
         document.addEventListener('click', (e) => {
             if (e.target !== inputEl && !boxEl.contains(e.target)) {
                 boxEl.style.display = 'none';
@@ -226,15 +224,10 @@
         });
     }
 
-    // イベント設定
-    document.getElementById('headerSearchBtn').addEventListener('click', () => {
-        executeSearch(document.getElementById('headerKeyword').value);
-    });
-    document.getElementById('headerKeyword').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') executeSearch(document.getElementById('headerKeyword').value);
-    });
-
+    // 適用
     setupCustomSuggest('headerKeyword', 'headerSuggestBox');
+
+    // 中央はもうないので削除済み
 </script>
 
 </body>
