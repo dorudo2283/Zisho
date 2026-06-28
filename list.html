@@ -96,10 +96,10 @@
             justify-content: space-between; 
             align-items: center; 
             user-select: none; 
+            color: #333;
         }
         .dict-header:hover { 
             background: #f1f3f5; 
-            color: #0056b3; 
         }
         .dict-header::after { 
             content: '▼'; 
@@ -148,7 +148,7 @@
         .no-result { 
             color: #cc0000; 
             text-align: center; 
-            padding: 30px 10px; 
+            padding: 40px 10px; 
             font-size: 15px; 
         }
 
@@ -176,6 +176,7 @@
             font-size: 16px;
             cursor: pointer;
             border-bottom: 1px solid #eee;
+            color: #222; /* 見やすさ強化 */
         }
         .suggest-box li:last-child { border-bottom: none; }
         .suggest-box li:hover { 
@@ -224,7 +225,6 @@
         }
     }
 
-    // 簡易類似度スコア
     function getSimilarityScore(word, q) {
         const lowerWord = word.toLowerCase();
         const lowerQ = q.toLowerCase();
@@ -244,7 +244,7 @@
             { id: 'eiwa',   name: '英和辞典', data: (typeof dictEiwa !== 'undefined') ? dictEiwa : {} }
         ];
 
-        let firstOpened = false;
+        let hasAnyResult = false;
 
         targetDicts.forEach(dict => {
             let htmlContent = '';
@@ -261,12 +261,13 @@
                 if (isMatch) {
                     const textBody = (item && item.html) ? item.html : 
                                      (typeof item === 'string' ? item : 'データ形式が不明です。');
-                    
                     matches.push({ key, textBody });
                 }
             });
 
-            if (matches.length === 0) return; // 該当なしは非表示
+            if (matches.length === 0) return;
+
+            hasAnyResult = true;
 
             matches.forEach(match => {
                 htmlContent += `
@@ -284,12 +285,6 @@
                 <div class="dict-body">${htmlContent}</div>
             `;
 
-            // 最初の辞典だけ自動で開く
-            if (!firstOpened) {
-                dictDiv.classList.add('open');
-                firstOpened = true;
-            }
-
             dictDiv.querySelector('.dict-header').addEventListener('click', () => {
                 dictDiv.classList.toggle('open');
             });
@@ -297,12 +292,12 @@
             container.appendChild(dictDiv);
         });
 
-        if (container.children.length === 0) {
+        if (!hasAnyResult) {
             container.innerHTML = `<div class="no-result">「${query}」に該当する項目はありませんでした。</div>`;
         }
     }
 
-    // ヘッダー検索イベント
+    // ヘッダー検索
     document.getElementById('headerSearchBtn').addEventListener('click', () => {
         executeSearch(document.getElementById('headerKeyword').value);
     });
@@ -310,7 +305,7 @@
         if (e.key === 'Enter') executeSearch(document.getElementById('headerKeyword').value);
     });
 
-    // サジェスト（indexと同じ高機能版）
+    // サジェスト
     function initSuggestions() {
         const allKeys = [
             ...Object.keys((typeof dictKanji !== 'undefined') ? dictKanji : {}),
