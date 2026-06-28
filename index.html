@@ -37,8 +37,7 @@
     <div class="notice">
         <h2>📢 お知らせ</h2>
         <p>・漢字・国語・英和の3種類の辞典を横断検索できます。<br>
-           ・検索ボタンで確実に検索できます。<br>
-           ・入力中に候補が表示されます。</p>
+           ・検索ボタンで確実に検索できます。</p>
     </div>
 </div>
 
@@ -69,15 +68,16 @@
         const dEiwa = (typeof dictEiwa !== 'undefined') ? dictEiwa : {};
         const terms = new Set();
 
-        // dictKanji（文字列形式）
+        // 漢字（文字列）
         Object.keys(dKanji).forEach(key => terms.add(key));
 
-        // dictKokugo と dictEiwa（オブジェクト形式）
+        // 国語・英和（オブジェクト）
         [dKokugo, dEiwa].forEach(dict => {
             Object.keys(dict).forEach(key => {
                 terms.add(key);
-                if (dict[key] && dict[key].search && Array.isArray(dict[key].search)) {
-                    dict[key].search.forEach(term => {
+                const item = dict[key];
+                if (item && item.search && Array.isArray(item.search)) {
+                    item.search.forEach(term => {
                         if (typeof term === 'string') terms.add(term);
                     });
                 }
@@ -132,14 +132,12 @@
         });
     }
 
-    // 検索ボタンとEnterキー
+    // 検索ボタン・Enter
     document.getElementById('headerSearchBtn').addEventListener('click', () => {
         executeSearch(document.getElementById('headerKeyword').value);
     });
     document.getElementById('headerKeyword').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            executeSearch(document.getElementById('headerKeyword').value);
-        }
+        if (e.key === 'Enter') executeSearch(document.getElementById('headerKeyword').value);
     });
 
     setupCustomSuggest('headerKeyword', 'headerSuggestBox');
