@@ -12,8 +12,6 @@
             background: #f5f5f5; 
             color: #333; 
         }
-        
-        /* 上部共通バー */
         .header-bar { 
             background: #0056b3; 
             color: white; 
@@ -58,8 +56,6 @@
             cursor: pointer; 
             font-weight: bold; 
         }
-
-        /* メインコンテンツ */
         .main-container { 
             max-width: 600px; 
             margin: 40px auto 0; 
@@ -74,8 +70,6 @@
             margin-bottom: 30px; 
             color: #333; 
         }
-
-        /* お知らせエリア */
         .notice {
             background: #f8f9fa;
             border: 1px solid #e0e0e0;
@@ -91,8 +85,6 @@
             font-size: 18px;
             color: #0056b3;
         }
-
-        /* サジェスト */
         .suggest-box {
             position: absolute;
             top: 100%;
@@ -116,7 +108,7 @@
             font-size: 16px;
             cursor: pointer;
             border-bottom: 1px solid #eee;
-            color: #222;   /* ← ここを強化 */
+            color: #222;
         }
         .suggest-box li:last-child { border-bottom: none; }
         .suggest-box li:hover { 
@@ -138,7 +130,6 @@
 
 <div class="main-container">
     <h1>簡単辞典WEB</h1>
-    
     <div class="notice">
         <h2>📢 お知らせ</h2>
         <p>・漢字・国語・英和の3種類の辞典を横断検索できます。<br>
@@ -168,15 +159,28 @@
         return 0;
     }
 
-    function getKeywords() {
+    function getAllSearchTerms() {
         const dKanji = (typeof dictKanji !== 'undefined') ? dictKanji : {};
         const dKokugo = (typeof dictKokugo !== 'undefined') ? dictKokugo : {};
         const dEiwa = (typeof dictEiwa !== 'undefined') ? dictEiwa : {};
-        const allKeys = [...Object.keys(dKanji), ...Object.keys(dKokugo), ...Object.keys(dEiwa)];
-        return Array.from(new Set(allKeys));
+        
+        const terms = new Set();
+
+        [dKanji, dKokugo, dEiwa].forEach(dict => {
+            Object.keys(dict).forEach(key => {
+                terms.add(key);
+                if (dict[key].search && Array.isArray(dict[key].search)) {
+                    dict[key].search.forEach(term => {
+                        if (typeof term === 'string') terms.add(term);
+                    });
+                }
+            });
+        });
+
+        return Array.from(terms);
     }
 
-    const masterKeywords = getKeywords();
+    const masterKeywords = getAllSearchTerms();
 
     function setupCustomSuggest(inputId, suggestBoxId) {
         const inputEl = document.getElementById(inputId);
@@ -224,10 +228,7 @@
         });
     }
 
-    // 適用
     setupCustomSuggest('headerKeyword', 'headerSuggestBox');
-
-    // 中央はもうないので削除済み
 </script>
 
 </body>
