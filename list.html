@@ -148,6 +148,56 @@
     document.getElementById('headerKeyword').addEventListener('keypress', (e) => {
         if (e.key === 'Enter') executeSearch(document.getElementById('headerKeyword').value);
     });
+
+    // list.html 用のサジェスト（これが効いていなかった）
+    function initListSuggest() {
+        const allTerms = [];
+        [dictKanji, dictKokugo, dictEiwa].forEach(dict => {
+            if (!dict) return;
+            Object.keys(dict).forEach(key => allTerms.push(key));
+        });
+        const masterKeywords = Array.from(new Set(allTerms));
+
+        const inputEl = document.getElementById('headerKeyword');
+        const boxEl = document.getElementById('headerSuggestBox');
+
+        inputEl.addEventListener('input', () => {
+            const q = inputEl.value.trim().toLowerCase();
+            boxEl.innerHTML = '';
+
+            if (!q || q.length < 1) {
+                boxEl.style.display = 'none';
+                return;
+            }
+
+            const matched = masterKeywords
+                .map(word => ({ word, score: getSimilarityScore(word, q) }))
+                .filter(item => item.score > 0)
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 10);
+
+            matched.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item.word;
+                li.addEventListener('click', () => {
+                    inputEl.value = item.word;
+                    boxEl.style.display = 'none';
+                    executeSearch(item.word);
+                });
+                boxEl.appendChild(li);
+            });
+
+            boxEl.style.display = matched.length > 0 ? 'block' : 'none';
+        });
+
+        document.addEventListener('click', (e) => {
+            if (e.target !== inputEl && !boxEl.contains(e.target)) {
+                boxEl.style.display = 'none';
+            }
+        });
+    }
+
+    window.addEventListener('DOMContentLoaded', initListSuggest);
 </script>
 
 </body>
