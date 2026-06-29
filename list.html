@@ -51,6 +51,7 @@
         function displayResults(query) {
             const resultsDiv = document.getElementById('results');
             const q = query.toLowerCase();
+            
             let matches = [];
             matches = matches.concat(jpData.filter(item => 
                 item.word.toLowerCase().includes(q) || item.meaning.toLowerCase().includes(q)));
