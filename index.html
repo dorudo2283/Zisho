@@ -11,7 +11,7 @@
         .search-container { position: relative; flex: 1; max-width: 600px; }
         .search-bar { width: 100%; padding: 10px; border: none; border-radius: 5px; font-size: 16px; }
         .clear-btn { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; font-size: 18px; cursor: pointer; color: #666; }
-        .suggestions { position: absolute; top: 100%; left: 0; width: 100%; background: white; border: 1px solid #ddd; max-height: 300px; overflow-y: auto; z-index: 200; display: none; }
+        .suggestions { position: absolute; top: 100%; left: 0; width: 100%; background: white; border: 1px solid #ddd; max-height: 300px; overflow-y: auto; z-index: 200; display: none; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
         .suggestion-item { padding: 10px; cursor: pointer; border-bottom: 1px solid #eee; }
         .suggestion-item:hover { background: #f0f0f0; }
         .main-content { padding: 20px; max-width: 1200px; margin: 0 auto; }
@@ -41,20 +41,16 @@
             <div class="tab" onclick="switchTab(2)">英語辞典</div>
         </div>
 
-        <!-- ホーム -->
         <div id="home" class="content-area active">
             <h1>ようこそ、簡単辞典WEBへ</h1>
-            <p>検索バーから単語を入力して探しましょう。</p>
-            <button onclick="window.location.href='list.html'">検索結果一覧を見る</button>
+            <p>検索バーから単語を入力（Enterで検索）</p>
         </div>
 
-        <!-- 日本語 -->
         <div id="jp" class="content-area">
             <h2>日本語辞典</h2>
             <div id="jp-content"></div>
         </div>
 
-        <!-- 英語 -->
         <div id="en" class="content-area">
             <h2>英語辞典</h2>
             <div id="en-content"></div>
@@ -64,21 +60,22 @@
     <script src="Jpdata.js"></script>
     <script src="Endata.js"></script>
     <script>
-        // 全単語リスト（サジェスト用）
         var allWords = [...jpData.map(item => item.word), ...enData.map(item => item.word)];
 
         function handleSearch(e) {
             const query = e.target.value.toLowerCase().trim();
             const suggestionsDiv = document.getElementById('suggestions');
+            
             if (query.length === 0) {
                 suggestionsDiv.style.display = 'none';
                 return;
             }
 
             const matches = allWords.filter(word => word.toLowerCase().includes(query));
+            
             if (matches.length > 0) {
                 suggestionsDiv.innerHTML = '';
-                matches.forEach(match => {
+                matches.slice(0, 10).forEach(match => {
                     const div = document.createElement('div');
                     div.className = 'suggestion-item';
                     div.textContent = match;
@@ -93,6 +90,10 @@
             } else {
                 suggestionsDiv.style.display = 'none';
             }
+
+            if (e.key === 'Enter') {
+                performSearch(query);
+            }
         }
 
         function clearSearch() {
@@ -101,6 +102,7 @@
         }
 
         function performSearch(query) {
+            if (!query) return;
             window.location.href = `list.html?q=${encodeURIComponent(query)}`;
         }
 
@@ -124,7 +126,7 @@
         }
 
         function showDetail(word, meaning) {
-            alert(`${word}: ${meaning}`);
+            alert(`${word}：${meaning}`);
         }
     </script>
 </body>
