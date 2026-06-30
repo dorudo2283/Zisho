@@ -19,7 +19,7 @@
         
         .main-content { padding: 40px 20px; max-width: 1200px; margin: 0 auto; }
         
-        /* --- 検索結果 --- */
+        /* --- 検索結果の見た目 --- */
         .search-title {
             text-align: center;
             font-size: 22px;
@@ -114,62 +114,61 @@
     <script>
         let combinedData = [];
 
-        // ページ読み込み時にデータを統合する（大文字・小文字どちらの変数名でも安全に結合する構造）
         window.onload = () => {
-            if (window.jpData) {
-                combinedData = combinedData.concat(window.jpData);
-            }
-            if (window.JpData) {
-                combinedData = combinedData.concat(window.JpData);
-            }
-            if (window.enData) {
-                combinedData = combinedData.concat(window.enData);
-            }
-            if (window.EnData) {
-                combinedData = combinedData.concat(window.EnData);
-            }
-            
-            // 開発者ツールのコンソールで総数が合致しているか確認するためのナッジ
-            console.log("【システム】辞書データの結合が完了しました。総単語数:", combinedData.length);
+            if (window.jpData) combinedData = combinedData.concat(window.jpData);
+            if (window.JpData) combinedData = combinedData.concat(window.JpData);
+            if (window.enData) combinedData = combinedData.concat(window.enData);
+            if (window.EnData) combinedData = combinedData.concat(window.EnData);
         };
 
-        function normalizeString(str) {
-            return str
-                .toLowerCase()
-                .replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) {
-                    return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
-                });
-        }
-
-        // 検索フィルタリングロジック
-        function filterData(query) {
-            if (!query) return [];
-            const normalizedQuery = normalizeString(query);
-
-            return combinedData.filter(item => {
-                const word = normalizeString(item.word);
-                // ローマ字・読みのスペースを除去
-                const romaji = item.romaji ? normalizeString(item.romaji).replace(/\s+/g, '') : '';
-
-                // 1文字入力の時の厳格ルール（前方一致を優先）
-                if (normalizedQuery.length === 1) {
-                    return word.startsWith(normalizedQuery) || romaji.startsWith(normalizedQuery);
-                }
-
-                // 2文字以上の時は、前方一致・部分一致を広く許可
-                return word.includes(normalizedQuery) || romaji.includes(normalizedQuery);
+        // 文字のブレ（大文字・全角など）を整える機能
+        function cleanText(str) {
+            return str.toLowerCase().replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) {
+                return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
             });
         }
 
+        // ① 候補リスト（サジェスト）用のゆるい絞り込み（1文字でも頭文字マッチで先回り表示）
+        function filterSuggestions(query) {
+            if (!query) return [];
+            const target = cleanText(query);
+
+            return combinedData.filter(item => {
+                const word = cleanText(item.word);
+                const romaji = item.romaji ? cleanText(item.romaji).replace(/\s+/g, '') : '';
+
+                if (target.length === 1) {
+                    return word.startsWith(target) || romaji.startsWith(target);
+                }
+                return word.includes(target) || romaji.includes(target);
+            });
+        }
+
+        // ② 本番検索（エンターキー）用の厳格な絞り込み（完全一致のみ合格）
+        function filterExactSearch(query) {
+            if (!query) return [];
+            const target = cleanText(query);
+
+            return combinedData.filter(item => {
+                const word = cleanText(item.word);
+                const romaji = item.romaji ? cleanText(item.romaji).replace(/\s+/g, '') : '';
+
+                // 単語そのもの、またはローマ字（スペースなし）と100%完全一致するか判定
+                return word === target || romaji === target;
+            });
+        }
+
+        // 入力中のキーボード操作を処理する機能
         function handleSearch(e) {
+            const query = e.target.value.trim();
+
+            // 【エンターキーが押されたとき】
             if (e.key === 'Enter') {
-                const query = e.target.value.trim();
                 document.getElementById('suggestions').style.display = 'none';
-                performSearch(query);
+                performExactSearch(query); // 厳格な完全一致検索を実行
                 return;
             }
 
-            const query = e.target.value.trim();
             const suggestionsDiv = document.getElementById('suggestions');
             
             if (query.length === 0) {
@@ -177,7 +176,8 @@
                 return;
             }
 
-            const matches = filterData(query);
+            // サジェスト候補は、打ち込みのガイドとして1文字からでも柔軟に出す
+            const matches = filterSuggestions(query);
             
             if (matches.length > 0) {
                 suggestionsDiv.innerHTML = '';
@@ -186,13 +186,14 @@
                     div.className = 'suggestion-item';
                     div.textContent = match.word;
                     
+                    // 候補をクリックしたときは、その単語で確定なので直接カードを出す
                     div.onclick = (event) => {
                         event.stopPropagation();
                         const searchInput = document.getElementById('searchInput');
                         searchInput.value = match.word;
                         suggestionsDiv.style.display = 'none';
                         
-                        performSearch(match.word);
+                        performExactSearch(match.word); // クリック時は確定検索
                         searchInput.blur();
                     };
                     suggestionsDiv.appendChild(div);
@@ -203,15 +204,18 @@
             }
         }
 
-        function performSearch(query) {
+        // 画面の下に検索結果のカードをドカンと出す機能（完全一致のみ）
+        function performExactSearch(query) {
             if (!query) return;
             const contentArea = document.getElementById('content-area');
-            const results = filterData(query);
+            
+            // 完全一致するデータだけを抽出
+            const results = filterExactSearch(query);
 
             let html = '';
             
             if (results.length === 0) {
-                html = `<p style="text-align: center; color: #666;">「${query}」に一致する単語は見つかりませんでした。</p>`;
+                html = `<p style="text-align: center; color: #666;">「${query}」に完全に一致する単語は見つかりませんでした。</p>`;
             } else {
                 html += `<h2 class="search-title">「${query}」の検索結果 …</h2>`;
 
@@ -241,7 +245,6 @@
             contentArea.innerHTML = html;
         }
 
-        // サジェストの外側をクリックしたときにリストを閉じる
         document.addEventListener('click', (e) => {
             const suggestionsDiv = document.getElementById('suggestions');
             const searchInput = document.getElementById('searchInput');
