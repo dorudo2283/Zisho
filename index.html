@@ -17,8 +17,78 @@
         .suggestion-item { padding: 10px; cursor: pointer; border-bottom: 1px solid #eee; color: #333; }
         .suggestion-item:hover { background: #f0f0f0; }
         
-        .main-content { padding: 20px; max-width: 1200px; margin: 0 auto; }
-        .result-item { background: white; padding: 15px; margin: 10px 0; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .main-content { padding: 40px 20px; max-width: 1200px; margin: 0 auto; }
+        
+        /* --- 検索結果（指定デザインの再現） --- */
+        .search-title {
+            text-align: center;
+            font-size: 22px;
+            color: #666;
+            font-weight: normal;
+            font-style: italic;
+            margin-bottom: 30px;
+        }
+
+        .dictionary-card {
+            background-color: #ededed;
+            padding: 40px 50px;
+            border-radius: 4px;
+            max-width: 800px;
+            margin: 0 auto 30px auto;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            font-family: "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-baseline;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .main-word {
+            font-size: 36px;
+            font-weight: bold;
+            color: #000;
+            margin: 0;
+        }
+
+        .pos-tag {
+            font-size: 32px;
+            font-weight: bold;
+            color: #000;
+            margin-left: 5px;
+        }
+
+        .word-meta {
+            font-size: 14px;
+            color: #333;
+        }
+
+        .result-meaning {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #111;
+            text-align: justify;
+            margin-bottom: 30px;
+            text-indent: 1em;
+        }
+
+        .result-examples {
+            list-style: none;
+            padding: 0;
+            margin: 0 auto;
+            display: table;
+            font-size: 18px;
+            line-height: 1.8;
+            color: #000;
+        }
+
+        .result-examples li {
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 <body>
@@ -34,7 +104,7 @@
 
     <div class="main-content">
         <div id="content-area">
-            <p>あ</p>
+            <p style="text-align: center; color: #666;">検索バーに単語を入力してください。</p>
         </div>
     </div>
 
@@ -54,35 +124,58 @@
             }
         };
 
+        // 入力文字列を正規化する関数（大文字小文字・全角英数を半角に変換）
+        function normalizeString(str) {
+            return str
+                .toLowerCase()
+                .replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) {
+                    return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
+                });
+        }
+
         // 入力時の処理（候補の表示）
         function handleSearch(e) {
+            if (e.key === 'Enter') {
+                const query = e.target.value.trim();
+                document.getElementById('suggestions').style.display = 'none';
+                performSearch(query);
+                return;
+            }
+
             const query = e.target.value.trim();
             const suggestionsDiv = document.getElementById('suggestions');
             
-            // 入力が空なら候補を閉じて終了
             if (query.length === 0) {
                 suggestionsDiv.style.display = 'none';
                 return;
             }
 
-            // 入力文字が含まれる単語（word）を絞り込む
+            const normalizedQuery = normalizeString(query);
+            // 単語（word）または対訳（translation）で前方・部分一致するもの
             const matches = combinedData.filter(item => 
-                item.word.toLowerCase().includes(query.toLowerCase())
+                normalizeString(item.word).includes(normalizedQuery) ||
+                (item.translation && normalizeString(item.translation).includes(normalizedQuery))
             );
             
             if (matches.length > 0) {
                 suggestionsDiv.innerHTML = '';
-                // 候補を生成
-                matches.forEach(match => {
+                // サジェストが多すぎると見づらいため最大10件に制限
+                matches.slice(0, 10).forEach(match => {
                     const div = document.createElement('div');
                     div.className = 'suggestion-item';
-                    div.textContent = match.word;
                     
-                    // 候補をクリックした時
-                    div.onclick = () => {
+                    // 英語データと日本語データでサジェスト表示の体裁を調整
+                    if (match.translation) {
+                        div.textContent = `${match.word} (${match.translation})`;
+                    } else {
+                        div.textContent = match.word;
+                    }
+                    
+                    div.onclick = (event) => {
+                        event.stopPropagation();
                         document.getElementById('searchInput').value = match.word;
                         suggestionsDiv.style.display = 'none';
-                        performSearch(match.word); // 検索実行
+                        performSearch(match.word);
                     };
                     suggestionsDiv.appendChild(div);
                 });
@@ -90,36 +183,50 @@
             } else {
                 suggestionsDiv.style.display = 'none';
             }
-
-            // Enterキーが押された時
-            if (e.key === 'Enter') {
-                suggestionsDiv.style.display = 'none';
-                performSearch(query);
-            }
         }
 
-        // 検索結果を表示する処理（単語と意味を並べるだけ）
+        // 検索結果を表示する処理
         function performSearch(query) {
             if (!query) return;
             const contentArea = document.getElementById('content-area');
-            const q = query.toLowerCase();
+            const normalizedQuery = normalizeString(query.trim());
 
-            // 単語（word）または意味（meaning）にヒットするものを抽出
+            // word, meaning, translation のいずれかにヒットするものを抽出
             const results = combinedData.filter(item => 
-                item.word.toLowerCase().includes(q) || item.meaning.toLowerCase().includes(q)
+                normalizeString(item.word).includes(normalizedQuery) || 
+                normalizeString(item.meaning).includes(normalizedQuery) ||
+                (item.translation && normalizeString(item.translation).includes(normalizedQuery))
             );
 
             let html = '';
             
             if (results.length === 0) {
-                html = `<p>「${query}」に一致する単語は見つかりませんでした。</p>`;
+                html = `<p style="text-align: center; color: #666;">「${query}」に一致する単語は見つかりませんでした。</p>`;
             } else {
-                // 余計な文字を入れず、該当する単語と意味をそのまま並べる
+                html += `<h2 class="search-title">「${query}」の検索結果 …</h2>`;
+
                 results.forEach(item => {
+                    // 例文リストの生成
+                    let examplesHtml = '';
+                    if (item.examples && item.examples.length > 0) {
+                        examplesHtml = '<ul class="result-examples">';
+                        item.examples.forEach(ex => {
+                            examplesHtml += `<li>・ ${ex}</li>`;
+                        });
+                        examplesHtml += '</ul>';
+                    }
+
+                    // 指定されたデザインを完全再現
                     html += `
-                        <div class="result-item">
-                            <h3>${item.word}</h3>
-                            <p>${item.meaning}</p>
+                        <div class="dictionary-card">
+                            <div class="card-header">
+                                <h1 class="main-word">${item.word} <span class="pos-tag">[${item.pos || '名詞'}]</span></h1>
+                                <div class="word-meta">【${item.type || '基本語'}】${item.romaji ? ` - ${item.romaji}` : ''}</div>
+                            </div>
+                            
+                            <p class="result-meaning">${item.meaning}</p>
+                            
+                            ${examplesHtml}
                         </div>
                     `;
                 });
@@ -128,16 +235,23 @@
             contentArea.innerHTML = html;
         }
 
-        // ×ボタンで検索クリア
+        // 画面の外をクリックしたときにサジェストを閉じる
+        document.addEventListener('click', (e) => {
+            const suggestionsDiv = document.getElementById('suggestions');
+            const searchInput = document.getElementById('searchInput');
+            if (e.target !== suggestionsDiv && e.target !== searchInput) {
+                suggestionsDiv.style.display = 'none';
+            }
+        });
+
         function clearSearch() {
             resetPage();
         }
 
-        // 初期状態に戻す
         function resetPage() {
             document.getElementById('searchInput').value = '';
             document.getElementById('suggestions').style.display = 'none';
-            document.getElementById('content-area').innerHTML = '<p>検索バーに単語を入力してください。</p>';
+            document.getElementById('content-area').innerHTML = '<p style="text-align: center; color: #666;">検索バーに単語を入力してください。</p>';
         }
     </script>
 </body>
