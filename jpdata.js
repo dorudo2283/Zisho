@@ -1,5 +1,5 @@
 // 日本語辞典データ
-var jpData = [
+window.jpData = [
     { 
         word: "こんにちは", 
         lang: "jp",
