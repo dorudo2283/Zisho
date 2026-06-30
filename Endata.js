@@ -1,18 +1,36 @@
 // 英語辞典データ
 var enData = [
-    { word: "hello", meaning: "こんにちは / こんにちは（挨拶）" },
-    { word: "thank you", meaning: "ありがとう（感謝）" },
-    { word: "goodbye", meaning: "さようなら（別れ）" },
-    { word: "cat", meaning: "猫（ペットとして人気）" },
-    { word: "dog", meaning: "犬（忠実な伴侶）" },
-    { word: "mountain", meaning: "山（壮大な自然景観）" },
-    { word: "river", meaning: "川（自然の水路）" },
-    { word: "eat", meaning: "食べる（食事を摂る）" },
-    { word: "drink", meaning: "飲む（液体を摂取する）" },
-    { word: "go", meaning: "行く（移動する）" },
-    { word: "come", meaning: "来る（こちらへ来る）" },
-    { word: "see", meaning: "見る（視覚で確認する）" },
-    { word: "listen", meaning: "聞く（注意して聞く）" },
-    { word: "book", meaning: "本（知識の源）" },
-    { word: "school", meaning: "School（教育機関）" }
+    { 
+        word: "hello", 
+        pos: "Greeting", 
+        type: "Interjection", 
+        translation: "こんにちは", 
+        meaning: "An expression of greeting used when meeting someone, initiating a telephone conversation, or catching someone's attention.",
+        examples: [
+            "He said hello to his neighbor this morning.（彼は今朝、近所の人にこんにちはと挨拶した。）",
+            "Hello! Is anyone there?（こんにちは！誰かそこにいますか？）"
+        ]
+    },
+    { 
+        word: "thank you", 
+        pos: "Phrase", 
+        type: "Expression", 
+        translation: "ありがとう", 
+        meaning: "A polite expression used to acknowledge a gift, service, or compliment, or to accept or refuse an offer.",
+        examples: [
+            "Thank you very much for your help.（手伝ってくれて本当にありがとう。）",
+            "A simple 'thank you' is enough.（シンプルな「ありがとう」だけで十分です。）"
+        ]
+    },
+    { 
+        word: "cat", 
+        pos: "Noun", 
+        type: "Animal", 
+        translation: "猫", 
+        meaning: "A small domesticated carnivorous mammal with soft fur, a short snout, and retractile claws. It is widely kept as a pet.",
+        examples: [
+            "The cat chased a mouse under the sofa.（猫がソファの下でネズミを追いかけた。）",
+            "I heard a cat meowing outside the window.（窓の外で猫が鳴いているのが聞こえた。）"
+        ]
+    }
 ];
