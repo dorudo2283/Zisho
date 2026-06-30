@@ -19,7 +19,7 @@
         
         .main-content { padding: 40px 20px; max-width: 1200px; margin: 0 auto; }
         
-        /* --- 検索結果（指定デザインの再現） --- */
+        /* --- 検索結果 --- */
         .search-title {
             text-align: center;
             font-size: 22px;
@@ -111,23 +111,14 @@
     <script src="Jpdata.js"></script>
     <script src="endata.js"></script>
     <script>
-        // 日本語と英語のデータをまとめる配列
         let combinedData = [];
 
-        // ページ読み込み時にデータを合流させる（大文字小文字のタイポ対策を強化）
         window.onload = () => {
-            if (typeof jpData !== 'undefined') {
-                combinedData = combinedData.concat(jpData);
-            }
-            if (typeof enData !== 'undefined') {
-                combinedData = combinedData.concat(enData);
-            } else if (typeof EnData !== 'undefined') {
-                combinedData = combinedData.concat(EnData);
-            }
-            console.log("データ読み込み完了。総件数:", combinedData.length);
+            if (typeof jpData !== 'undefined') combinedData = combinedData.concat(jpData);
+            if (typeof enData !== 'undefined') combinedData = combinedData.concat(enData);
+            else if (typeof EnData !== 'undefined') combinedData = combinedData.concat(EnData);
         };
 
-        // 入力文字列を正規化する関数（大文字小文字・全角英数を半角に変換）
         function normalizeString(str) {
             return str
                 .toLowerCase()
@@ -136,7 +127,33 @@
                 });
         }
 
-        // 入力時の処理（候補の表示）
+        // 高精度なフィルタリング関数（解説文での誤爆を防ぐ）
+        function filterData(query) {
+            if (!query) return [];
+            const normalizedQuery = normalizeString(query);
+
+            return combinedData.filter(item => {
+                const word = normalizeString(item.word);
+                const romaji = item.romaji ? normalizeString(item.romaji) : '';
+                const meaning = normalizeString(item.meaning);
+
+                // 1. 単語そのもの、または読み（ローマ字/カタカナ）が入力文字から始まっているか（最優先）
+                if (word.startsWith(normalizedQuery) || romaji.startsWith(normalizedQuery)) {
+                    return true;
+                }
+                // 2. 単語そのもの、または読みに入力文字が含まれているか
+                if (word.includes(normalizedQuery) || romaji.includes(normalizedQuery)) {
+                    return true;
+                }
+                // 3. 入力文字が2文字以上の時だけ、日本語の意味（解説文）の部分一致を許可（1文字検索時の誤爆防止）
+                if (normalizedQuery.length >= 2 && meaning.includes(normalizedQuery)) {
+                    return true;
+                }
+
+                return false;
+            });
+        }
+
         function handleSearch(e) {
             if (e.key === 'Enter') {
                 const query = e.target.value.trim();
@@ -153,28 +170,17 @@
                 return;
             }
 
-            const normalizedQuery = normalizeString(query);
-            
-            // 単語（word）、意味（meaning）、読み（romaji）のいずれかにヒットする候補を抽出
-            const matches = combinedData.filter(item => 
-                normalizeString(item.word).includes(normalizedQuery) ||
-                normalizeString(item.meaning).includes(normalizedQuery) ||
-                (item.romaji && normalizeString(item.romaji).includes(normalizedQuery))
-            );
+            // 精度を向上させたフィルターを通す
+            const matches = filterData(query);
             
             if (matches.length > 0) {
                 suggestionsDiv.innerHTML = '';
-                // サジェストが多すぎると見づらいため最大10件に制限
                 matches.slice(0, 10).forEach(match => {
                     const div = document.createElement('div');
                     div.className = 'suggestion-item';
                     
-                    // 英語データの場合は、サジェスト一覧で分かりやすいように (英語) と付与する
-                    if (match.lang === 'en') {
-                        div.textContent = `${match.word} (英語)`;
-                    } else {
-                        div.textContent = match.word;
-                    }
+                    // 「(英語)」の無駄なテキストを削除し、純粋な単語名のみ表示
+                    div.textContent = match.word;
                     
                     div.onclick = (event) => {
                         event.stopPropagation();
@@ -183,7 +189,7 @@
                         suggestionsDiv.style.display = 'none';
                         
                         performSearch(match.word);
-                        searchInput.blur(); // 検索窓からフォーカスを外してEnter誤爆を防ぐ
+                        searchInput.blur();
                     };
                     suggestionsDiv.appendChild(div);
                 });
@@ -193,18 +199,12 @@
             }
         }
 
-        // 検索結果を表示する処理
         function performSearch(query) {
             if (!query) return;
             const contentArea = document.getElementById('content-area');
-            const normalizedQuery = normalizeString(query.trim());
 
-            // word, meaning, romaji のいずれかにヒットするものを抽出
-            const results = combinedData.filter(item => 
-                normalizeString(item.word).includes(normalizedQuery) || 
-                normalizeString(item.meaning).includes(normalizedQuery) ||
-                (item.romaji && normalizeString(item.romaji).includes(normalizedQuery))
-            );
+            // 精度を向上させたフィルターを通す
+            const results = filterData(query);
 
             let html = '';
             
@@ -214,7 +214,6 @@
                 html += `<h2 class="search-title">「${query}」の検索結果 …</h2>`;
 
                 results.forEach(item => {
-                    // 例文リストの生成
                     let examplesHtml = '';
                     if (item.examples && item.examples.length > 0) {
                         examplesHtml = '<ul class="result-examples">';
@@ -224,16 +223,13 @@
                         examplesHtml += '</ul>';
                     }
 
-                    // 指定されたデザインを完全再現
                     html += `
                         <div class="dictionary-card">
                             <div class="card-header">
                                 <h1 class="main-word">${item.word} <span class="pos-tag">[${item.pos || '名詞'}]</span></h1>
                                 <div class="word-meta">【${item.type || '基本語'}】${item.romaji ? ` - ${item.romaji}` : ''}</div>
                             </div>
-                            
                             <p class="result-meaning">${item.meaning}</p>
-                            
                             ${examplesHtml}
                         </div>
                     `;
@@ -243,7 +239,6 @@
             contentArea.innerHTML = html;
         }
 
-        // 画面の外をクリックしたときにサジェストを閉じる
         document.addEventListener('click', (e) => {
             const suggestionsDiv = document.getElementById('suggestions');
             const searchInput = document.getElementById('searchInput');
