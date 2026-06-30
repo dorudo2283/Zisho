@@ -2,6 +2,7 @@
 var jpData = [
     { 
         word: "こんにちは", 
+        lang: "jp",
         pos: "挨拶", 
         type: "間投詞", 
         romaji: "kon ni chi wa", 
@@ -14,6 +15,7 @@ var jpData = [
     },
     { 
         word: "ありがとう", 
+        lang: "jp",
         pos: "挨拶", 
         type: "感動詞", 
         romaji: "a ri ga to u", 
@@ -25,6 +27,7 @@ var jpData = [
     },
     { 
         word: "猫", 
+        lang: "jp",
         pos: "名詞", 
         type: "動物", 
         romaji: "ne ko", 
