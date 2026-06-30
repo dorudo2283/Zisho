@@ -1,7 +1,8 @@
-// 英語辞典データ（日本語で分かりやすく解説するスタイル）
+// 英語辞典データ（日本語解説・和訳付き例文スタイル）
 var enData = [
     { 
-        word: "thank you", 
+        word: "Thank you", 
+        lang: "en",
         pos: "挨拶", 
         type: "他動詞", 
         romaji: "サンキュー", 
@@ -11,17 +12,19 @@ var enData = [
         ]
     },
     { 
-        word: "hello", 
+        word: "Hello", 
+        lang: "en",
         pos: "挨拶", 
         type: "間投詞", 
         romaji: "ハロー", 
-        meaning: "「Hello」は英語における最も基本的かつ一般的な挨拶の言葉。時間帯を問わず、対面時だけでなく電話の第一声や、相手の注意を引きたい時（「もしもし」「ちょっと」）などにも幅広く使われる。<br>読み：ハロー<br>和訳：こんにちは"
+        meaning: "「Hello」は英語における最も基本かつ一般的な挨拶の言葉。時間帯を問わず、対面時だけでなく電話の第一声や、相手の注意を引きたい時（「もしもし」「ちょっと」）などにも幅広く使われる。<br>読み：ハロー<br>和訳：こんにちは",
         examples: [
             "He said hello to his neighbor this morning.（彼は今朝、近所の人にこんにちはと挨拶した。）"
         ]
     },
     { 
-        word: "cat", 
+        word: "Cat", 
+        lang: "en",
         pos: "名詞", 
         type: "動物", 
         romaji: "キャット", 
