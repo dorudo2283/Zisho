@@ -109,19 +109,22 @@
     </div>
 
     <script src="Jpdata.js"></script>
-    <script src="Endata.js"></script>
+    <script src="endata.js"></script>
     <script>
         // 日本語と英語のデータをまとめる配列
         let combinedData = [];
 
-        // ページ読み込み時にデータを合流させる
+        // ページ読み込み時にデータを合流させる（大文字小文字のタイポ対策を強化）
         window.onload = () => {
             if (typeof jpData !== 'undefined') {
                 combinedData = combinedData.concat(jpData);
             }
             if (typeof enData !== 'undefined') {
                 combinedData = combinedData.concat(enData);
+            } else if (typeof EnData !== 'undefined') {
+                combinedData = combinedData.concat(EnData);
             }
+            console.log("データ読み込み完了。総件数:", combinedData.length);
         };
 
         // 入力文字列を正規化する関数（大文字小文字・全角英数を半角に変換）
@@ -175,9 +178,12 @@
                     
                     div.onclick = (event) => {
                         event.stopPropagation();
-                        document.getElementById('searchInput').value = match.word;
+                        const searchInput = document.getElementById('searchInput');
+                        searchInput.value = match.word;
                         suggestionsDiv.style.display = 'none';
+                        
                         performSearch(match.word);
+                        searchInput.blur(); // 検索窓からフォーカスを外してEnter誤爆を防ぐ
                     };
                     suggestionsDiv.appendChild(div);
                 });
