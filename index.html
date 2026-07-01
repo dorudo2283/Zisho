@@ -12,7 +12,7 @@
         .search-bar { width: 100%; padding: 10px; border: none; border-radius: 5px; font-size: 16px; box-sizing: border-box; color: #333; }
         .clear-btn { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; font-size: 18px; cursor: pointer; color: #666; }
         
-        /* 候補（サジェスト）リスト：文字色を黒に、シンプルに文字だけに修正 */
+        /* 候補（サジェスト）リスト */
         .suggestions { position: absolute; top: 100%; left: 0; width: 100%; background: white; border: 1px solid #ccc; border-top: none; border-radius: 0 0 5px 5px; max-height: 200px; overflow-y: auto; box-sizing: border-box; display: none; z-index: 1000; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .suggestion-item { padding: 10px; cursor: pointer; border-bottom: 1px solid #eee; color: #333; font-size: 16px; text-align: left; }
         .suggestion-item:last-child { border-bottom: none; }
@@ -24,10 +24,10 @@
         /* 「〇〇」の検索結果... のタイトルスタイル */
         .search-title { text-align: center; color: #777; font-style: italic; font-size: 20px; margin-bottom: 25px; }
         
-        /* 辞書カード：画像に合わせた薄グレーの背景とレイアウト */
+        /* 辞書カード */
         .dictionary-card { background: #f5f5f5; padding: 30px; border-radius: 4px; margin-bottom: 20px; box-shadow: none; text-align: center; }
         
-        /* ヘッダー：左側（日本語/英語）と右側（読み・ローマ字）の2カラム構成 */
+        /* ヘッダー */
         .card-header { display: flex; justify-content: space-between; align-items: flex-baseline; margin-bottom: 25px; padding-bottom: 0; border-bottom: none; }
         
         /* 左側：単語と品詞 */
@@ -38,7 +38,7 @@
         /* 右側：【分類】と読み・ローマ字 */
         .header-right { text-align: right; font-size: 14px; color: #333; }
         
-        /* 意味・説明文：中央揃えで読みやすい余白 */
+        /* 意味・説明文 */
         .result-meaning { font-size: 18px; line-height: 1.6; color: #111; margin: 0 auto 25px auto; max-width: 650px; white-space: pre-line; text-align: center; }
         
         /* 例文セクション */
@@ -83,33 +83,36 @@
             return t.replace(/\s+/g, '');
         }
 
-        // 【修正】サジェスト抽出：説明文（meaning）を対象から除外し、名前（word）とローマ字（romaji）だけにヒットさせる
+        // サジェスト抽出（空文字の脆弱性を修正）
         function filterSuggestions(query) {
-            if (!query) return [];
+            // 入力値または整形後の文字が空なら、絶対に何も返さない
+            if (!query || !query.trim()) return [];
             const target = cleanText(query);
+            if (!target) return []; 
 
             return combinedData.filter(item => {
                 const word = cleanText(item.word);
                 const romaji = item.romaji ? cleanText(item.romaji) : '';
                 
-                // 見出し語、またはローマ字のいずれかに検索文字が含まれている場合のみ
+                // wordかromajiに「 target 」の文字が含まれているかのみを厳格に判定
                 return word.includes(target) || romaji.includes(target);
             });
         }
 
-        // 【修正】確定検索：ここでも説明文（meaning）のバックアップ部分一致を排除し、名前かローマ字の合致のみに限定
+        // 確定検索（空文字の脆弱性を修正）
         function filterExactSearch(query) {
-            if (!query) return [];
+            if (!query || !query.trim()) return [];
             const target = cleanText(query);
+            if (!target) return [];
 
-            // まずは「見出し語」または「ローマ字」が完全に一致するものを探す
+            // 1. まず完全一致を探す
             let results = combinedData.filter(item => {
                 const word = cleanText(item.word);
                 const romaji = item.romaji ? cleanText(item.romaji) : '';
                 return word === target || romaji === target;
             });
 
-            // 完全一致がなければ、「見出し語」または「ローマ字」にその文字が含まれているものを探す
+            // 2. 完全一致がなければ部分一致を探す
             if (results.length === 0) {
                 results = combinedData.filter(item => {
                     const word = cleanText(item.word);
@@ -123,7 +126,9 @@
         // 入力時の処理（サジェスト生成）
         function handleInput(value) {
             const suggestionsDiv = document.getElementById('suggestions');
-            if (!value.trim()) {
+            
+            // スペースのみなどの適当な入力をここで即時弾く
+            if (!value || !value.trim()) {
                 suggestionsDiv.style.display = 'none';
                 return;
             }
@@ -162,7 +167,7 @@
             document.getElementById('suggestions').style.display = 'none';
             const contentArea = document.getElementById('content-area');
             
-            if (!query.trim()) {
+            if (!query || !query.trim()) {
                 resetPage();
                 return;
             }
