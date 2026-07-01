@@ -104,7 +104,7 @@
 
     <div class="main-content">
         <div id="content-area">
-            <p style="text-align: center; color: #666;">。</p>
+            <p style="text-align: center; color: #666;">検索バーに単語を入力してください。</p>
         </div>
     </div>
 
@@ -114,11 +114,19 @@
     <script>
         let combinedData = [];
 
+        // 【修正ポイント】大文字・小文字の重複読み込みを完全に防止
         window.onload = () => {
-            if (window.jpData) combinedData = combinedData.concat(window.jpData);
-            if (window.JpData) combinedData = combinedData.concat(window.JpData);
-            if (window.enData) combinedData = combinedData.concat(window.enData);
-            if (window.EnData) combinedData = combinedData.concat(window.EnData);
+            if (window.jpData) {
+                combinedData = combinedData.concat(window.jpData);
+            } else if (window.JpData) {
+                combinedData = combinedData.concat(window.JpData);
+            }
+
+            if (window.enData) {
+                combinedData = combinedData.concat(window.enData);
+            } else if (window.EnData) {
+                combinedData = combinedData.concat(window.EnData);
+            }
         };
 
         // 文字のブレ（大文字・全角など）を整える機能
@@ -128,21 +136,19 @@
             });
         }
 
-        // ① 候補リスト（サジェスト）用の絞り込み（単語名のみ、ローマ字や説明文は完全除外、重複排除）
+        // ① 候補リスト（サジェスト）用の絞り込み（単語名のみ、重複排除）
         function filterSuggestions(query) {
             if (!query) return [];
             const target = cleanText(query);
 
-            // 単語の文字（word）だけで絞り込み（ローマ字や説明文は一切見ない）
             const filtered = combinedData.filter(item => {
                 const word = cleanText(item.word);
                 if (target.length === 1) {
-                    return word.startsWith(target); // 1文字の時は先頭一致
+                    return word.startsWith(target);
                 }
-                return word.includes(target); // 2文字以上の時は部分一致
+                return word.includes(target);
             });
 
-            // 同じ名前の単語が複数並ばないように重複を完全に排除する
             const uniqueMap = new Map();
             filtered.forEach(item => {
                 const key = cleanText(item.word);
@@ -154,25 +160,34 @@
             return Array.from(uniqueMap.values());
         }
 
-        // ② 本番検索（エンターキー）用の厳格な絞り込み（単語名のみの完全一致）
+        // ② 本番検索用の厳格な絞り込み
         function filterExactSearch(query) {
             if (!query) return [];
             const target = cleanText(query);
 
-            // 単語名（word）そのものだけと100%完全一致するか判定
-            return combinedData.filter(item => {
+            const matched = combinedData.filter(item => {
                 return cleanText(item.word) === target;
             });
+
+            // 万が一データに重複があっても、ここで確実に1件に絞り込む
+            const uniqueMap = new Map();
+            matched.forEach(item => {
+                const key = cleanText(item.word);
+                if (!uniqueMap.has(key)) {
+                    uniqueMap.set(key, item);
+                }
+            });
+
+            return Array.from(uniqueMap.values());
         }
 
         // 入力中のキーボード操作を処理する機能
         function handleSearch(e) {
             const query = e.target.value.trim();
 
-            // 【エンターキーが押されたとき】
             if (e.key === 'Enter') {
                 document.getElementById('suggestions').style.display = 'none';
-                performExactSearch(query); // 厳格な完全一致検索を実行
+                performExactSearch(query);
                 return;
             }
 
@@ -183,7 +198,6 @@
                 return;
             }
 
-            // サジェスト候補は、打ち込みのガイドとして1文字からでも柔軟に出す
             const matches = filterSuggestions(query);
             
             if (matches.length > 0) {
@@ -193,14 +207,13 @@
                     div.className = 'suggestion-item';
                     div.textContent = match.word;
                     
-                    // 候補をクリックしたときは、その単語で確定なので直接カードを出す
                     div.onclick = (event) => {
                         event.stopPropagation();
                         const searchInput = document.getElementById('searchInput');
                         searchInput.value = match.word;
                         suggestionsDiv.style.display = 'none';
                         
-                        performExactSearch(match.word); // クリック時は確定検索
+                        performExactSearch(match.word);
                         searchInput.blur();
                     };
                     suggestionsDiv.appendChild(div);
@@ -211,12 +224,10 @@
             }
         }
 
-        // 画面の下に検索結果のカードをドカンと出す機能（完全一致のみ）
+        // 画面の下に検索結果のカードを出す機能
         function performExactSearch(query) {
             if (!query) return;
             const contentArea = document.getElementById('content-area');
-            
-            // 完全一致するデータだけを抽出
             const results = filterExactSearch(query);
 
             let html = '';
