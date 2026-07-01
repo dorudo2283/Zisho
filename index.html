@@ -21,7 +21,7 @@
         /* メインコンテンツエリア */
         .container { max-width: 800px; margin: 20px auto; padding: 0 20px; }
         
-        /* 「〇〇の検索結果...」のタイトルスタイル */
+        /* 「〇〇」の検索結果... のタイトルスタイル */
         .search-title { text-align: center; color: #777; font-style: italic; font-size: 20px; margin-bottom: 25px; }
         
         /* 辞書カード：画像に合わせた薄グレーの背景とレイアウト */
@@ -63,7 +63,6 @@
         <p style="text-align: center; color: #666;">検索バーに単語を入力してください。</p>
     </div>
 
-    <!-- データファイルの読み込み -->
     <script src="jpdata.js"></script>
     <script src="endata.js"></script>
 
@@ -84,7 +83,7 @@
             return t.replace(/\s+/g, '');
         }
 
-        // サジェスト抽出
+        // 【修正】サジェスト抽出：説明文（meaning）を対象から除外し、名前（word）とローマ字（romaji）だけにヒットさせる
         function filterSuggestions(query) {
             if (!query) return [];
             const target = cleanText(query);
@@ -92,22 +91,25 @@
             return combinedData.filter(item => {
                 const word = cleanText(item.word);
                 const romaji = item.romaji ? cleanText(item.romaji) : '';
-                const meaning = item.meaning ? cleanText(item.meaning) : '';
-                return word.includes(target) || romaji.includes(target) || meaning.includes(target);
+                
+                // 見出し語、またはローマ字のいずれかに検索文字が含まれている場合のみ
+                return word.includes(target) || romaji.includes(target);
             });
         }
 
-        // 本格検索抽出
+        // 【修正】確定検索：ここでも説明文（meaning）のバックアップ部分一致を排除し、名前かローマ字の合致のみに限定
         function filterExactSearch(query) {
             if (!query) return [];
             const target = cleanText(query);
 
+            // まずは「見出し語」または「ローマ字」が完全に一致するものを探す
             let results = combinedData.filter(item => {
                 const word = cleanText(item.word);
                 const romaji = item.romaji ? cleanText(item.romaji) : '';
                 return word === target || romaji === target;
             });
 
+            // 完全一致がなければ、「見出し語」または「ローマ字」にその文字が含まれているものを探す
             if (results.length === 0) {
                 results = combinedData.filter(item => {
                     const word = cleanText(item.word);
@@ -134,7 +136,6 @@
             }
 
             let html = '';
-            // シンプルに文字だけ（黒色）を出すように修正
             matched.slice(0, 10).forEach(item => {
                 html += `<div class="suggestion-item" onclick="selectSuggestion('${item.word}')">${item.word}</div>`;
             });
@@ -156,7 +157,7 @@
             executeSearch(word);
         }
 
-        // 検索実行と画面描画（画像のデザインを再現）
+        // 検索実行と画面描画
         function executeSearch(query) {
             document.getElementById('suggestions').style.display = 'none';
             const contentArea = document.getElementById('content-area');
@@ -173,7 +174,6 @@
                 return;
             }
 
-            // 「〇〇」の検索結果... タイトルを最初に追加
             let html = `<div class="search-title">「${query}」の検索結果 ...</div>`;
             
             results.forEach(item => {
@@ -190,7 +190,6 @@
                     `;
                 }
 
-                // 右側の「分類 - 読み/ローマ字」のテキストを組み立て
                 let metaRight = '';
                 if (item.pos) {
                     metaRight += `【${item.pos}】`;
@@ -199,7 +198,6 @@
                     metaRight += metaRight ? ` - ${item.romaji}` : item.romaji;
                 }
 
-                // 左右分割構造のカードHTML
                 html += `
                     <div class="dictionary-card">
                         <div class="card-header">
@@ -220,7 +218,6 @@
             contentArea.innerHTML = html;
         }
 
-        // 外側クリックでサジェストを閉じる
         document.addEventListener('click', (e) => {
             const suggestionsDiv = document.getElementById('suggestions');
             const searchInput = document.getElementById('searchInput');
