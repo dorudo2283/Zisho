@@ -285,7 +285,7 @@
             margin-bottom: 30px;
         }
 
-        /* 認知デザインに則った視覚リンク */
+        /* 英訳・和訳用のクリック可能な単語の共通スタイル */
         .clickable-word {
             color: #2563eb;
             cursor: pointer;
@@ -460,8 +460,8 @@
             performExactSearch(query);
         }
 
-        // 英訳がタップされたときに自動で検索を実行する関数
-        function searchByEnMeaning(wordText) {
+        // タップされたときに自動で再検索を実行する共通関数
+        function autoSearchByClickedText(wordText) {
             const searchInput = document.getElementById('searchInput');
             searchInput.value = wordText;
             performExactSearch(wordText);
@@ -487,10 +487,9 @@
                 html += `<h2 class="search-title">「${query}」の検索結果 …</h2>`;
 
                 results.forEach(item => {
-                    // 日本語用データにある「enTranslation」を正確に読み出す
+                    // --- 1. 日本語データ側：enTranslation（英訳）の処理 ---
                     let enMeaningHtml = '';
                     if (item.enTranslation) {
-                        // 「/」や「,」が含まれる場合は分割して個別にリンク化する
                         const tokens = item.enTranslation.split(/[\/,]+/);
                         let linksHtml = '';
                         
@@ -498,13 +497,24 @@
                             const trimmed = token.trim();
                             if (trimmed) {
                                 const escapedWord = trimmed.replace(/'/g, "\\'");
-                                linksHtml += `<span class="clickable-word" onclick="searchByEnMeaning('${escapedWord}')">${trimmed}</span>`;
+                                linksHtml += `<span class="clickable-word" onclick="autoSearchByClickedText('${escapedWord}')">${trimmed}</span>`;
                                 if (index < tokens.length - 1 && tokens[index+1].trim()) {
                                     linksHtml += ' / ';
                                 }
                             }
                         });
                         enMeaningHtml = `<p class="result-en-meaning">英訳：${linksHtml}</p>`;
+                    }
+
+                    // --- 2. 英語データ側：meaning内の「和訳：〇〇」を自動リンク化する処理 ---
+                    let processedMeaning = item.meaning || '';
+                    if (item.lang === 'en' && processedMeaning.includes('和訳：')) {
+                        // 「和訳：」に続く文字列（HTMLタグや文末まで）を正規表現でキャプチャ
+                        processedMeaning = processedMeaning.replace(/和訳：([^<>\n]+)/g, (match, p1) => {
+                            const trimmedJapanese = p1.trim();
+                            const escapedJapanese = trimmedJapanese.replace(/'/g, "\\'");
+                            return `和訳：<span class="clickable-word" onclick="autoSearchByClickedText('${escapedJapanese}')">${trimmedJapanese}</span>`;
+                        });
                     }
 
                     let examplesHtml = '';
@@ -523,7 +533,7 @@
                                 <h1 class="main-word">${item.word} <span class="pos-tag">[${item.pos || '名詞'}]</span></h1>
                                 <div class="word-meta">【${item.type || '基本語'}】${item.romaji ? ` - ${item.romaji}` : ''}</div>
                             </div>
-                            <p class="result-meaning">${item.meaning}</p>
+                            <p class="result-meaning">${processedMeaning}</p>
                             ${enMeaningHtml}
                             ${examplesHtml}
                         </div>
