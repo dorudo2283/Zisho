@@ -3,27 +3,231 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>簡単辞典WEB</title>
+    <title>簡単辞典WEB - Easy Web Dictionary</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f4f4f4; }
-        .navbar { background: #333; color: white; padding: 10px 20px; display: flex; align-items: center; position: sticky; top: 0; z-index: 100; }
-        .logo { font-size: 24px; font-weight: bold; cursor: pointer; margin-right: 20px; }
-        .search-container { position: relative; flex: 1; max-width: 600px; }
-        .search-bar { width: 100%; padding: 10px; border: none; border-radius: 5px; font-size: 16px; box-sizing: border-box; }
-        .clear-btn { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; font-size: 18px; cursor: pointer; color: #666; }
+        body {
+            font-family: Arial, "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #ffffff;
+            color: #333333;
+        }
+
+        /* --- 常に上部に表示されるナビゲーションバー --- */
+        .navbar {
+            background: #535353;
+            color: white;
+            padding: 10px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .logo-container {
+            cursor: pointer;
+        }
+
+        .logo-main {
+            font-size: 26px;
+            font-weight: normal;
+            margin: 0;
+        }
+
+        .logo-sub {
+            font-size: 14px;
+            margin-top: 2px;
+            color: #dddddd;
+        }
+
+        /* 検索バー周り */
+        .search-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .search-wrapper {
+            position: relative;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            background: white;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 12px 35px 12px 15px;
+            border: none;
+            font-size: 14px;
+            outline: none;
+            color: #33 Navy;
+            color: #333;
+        }
+
+        /* プレースホルダーの文字色を少し薄めに */
+        .search-bar::placeholder {
+            color: #757575;
+        }
+
+        .clear-btn {
+            position: absolute;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            color: #999;
+            padding: 0;
+        }
+
+        .search-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .search-btn:hover {
+            background: #2563eb;
+        }
         
-        /* 候補（サジェスト）リストの見た目 */
-        .suggestions { position: absolute; top: 100%; left: 0; width: 100%; background: white; border: 1px solid #ddd; max-height: 300px; overflow-y: auto; z-index: 200; display: none; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-        .suggestion-item { padding: 10px; cursor: pointer; border-bottom: 1px solid #eee; color: #333; }
-        .suggestion-item:hover { background: #f0f0f0; }
+        /* サジェストリスト */
+        .suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: white;
+            border: 1px solid #ddd;
+            max-height: 250px;
+            overflow-y: auto;
+            z-index: 2000;
+            display: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .suggestion-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .suggestion-item:hover {
+            background: #f0f4f8;
+        }
         
-        .main-content { padding: 40px 20px; max-width: 1200px; margin: 0 auto; }
-        
-        /* --- 検索結果の見た目 --- */
+        /* --- メインコンテンツ領域 --- */
+        .main-content {
+            padding: 0;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        /* --- 初期トップ画面（HP画像風デザイン） --- */
+        .welcome-view {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* ヒーロー看板（2色ブロック） */
+        .hero-box {
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .hero-top {
+            background: #e1f0ff;
+            padding: 40px 20px 20px 20px;
+        }
+
+        .hero-title {
+            font-size: 64px;
+            font-weight: normal;
+            margin: 0 0 10px 0;
+            letter-spacing: 2px;
+        }
+
+        .hero-subtitle {
+            font-size: 32px;
+            margin: 0;
+            font-weight: normal;
+        }
+
+        .hero-box .hero-bottom {
+            background: #cbe6f7;
+            padding: 20px;
+            font-size: 18px;
+            color: #111;
+        }
+
+        /* 使い方セクション */
+        .how-to-section {
+            margin-bottom: 50px;
+        }
+
+        .how-to-header {
+            display: flex;
+            align-items: center;
+            background: #eaeaea;
+            height: 70px;
+            margin-bottom: 40px;
+        }
+
+        .how-to-icon-block {
+            background: #aaaaaa;
+            width: 70px;
+            height: 70px;
+        }
+
+        .how-to-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0;
+            padding-left: 30px;
+        }
+
+        .how-to-text {
+            font-size: 14px;
+            line-height: 1.8;
+            text-align: center;
+            padding: 0 30px;
+            color: #000000;
+        }
+
+        /* フッター */
+        .footer {
+            text-align: center;
+            font-size: 13px;
+            color: #333;
+            margin-top: 80px;
+            padding-bottom: 40px;
+        }
+
+        /* --- 検索結果画面のスタイル --- */
+        .search-results-view {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
         .search-title {
             text-align: center;
-            font-size: 22px;
-            color: #666;
+            font-size: 20px;
+            color: #555;
             font-weight: normal;
             font-style: italic;
             margin-bottom: 30px;
@@ -33,10 +237,8 @@
             background-color: #ededed;
             padding: 40px 50px;
             border-radius: 4px;
-            max-width: 800px;
-            margin: 0 auto 30px auto;
+            margin-bottom: 30px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            font-family: "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
         }
 
         .card-header {
@@ -72,17 +274,30 @@
             line-height: 1.6;
             color: #111;
             text-align: justify;
-            margin-bottom: 20px; /* 英訳との間隔調整 */
+            margin-bottom: 20px;
             text-indent: 1em;
         }
 
-        /* スクリーンショットのレイアウトを再現するスタイル */
+        /* 英訳箇所のデザイン強化（アフォーダンス設計） */
         .result-en-meaning {
             font-size: 18px;
             line-height: 1.6;
             color: #111;
-            text-align: center; /* 中央揃え */
+            text-align: center;
             margin-bottom: 30px;
+        }
+
+        /* タップ可能な英語ワードのスタイル */
+        .clickable-word {
+            color: #2563eb;
+            cursor: pointer;
+            font-weight: bold;
+            transition: color 0.2s ease;
+        }
+
+        .clickable-word:hover {
+            color: #1d4ed8;
+            text-decoration: underline;
         }
 
         .result-examples {
@@ -103,18 +318,49 @@
 <body>
 
     <div class="navbar">
-        <div class="logo" onclick="resetPage()">簡単辞典WEB</div>
+        <div class="logo-container" onclick="resetPage()">
+            <h1 class="logo-main">簡単辞典WEB</h1>
+            <div class="logo-sub">Easy Web Dictionary</div>
+        </div>
         <div class="search-container">
-            <input type="text" id="searchInput" class="search-bar" placeholder="単語を入力..." onkeyup="handleSearch(event)">
-            <button class="clear-btn" onclick="clearSearch()">×</button>
+            <div class="search-wrapper">
+                <input type="text" id="searchInput" class="search-bar" placeholder="検索したい言葉を入力してください" onkeyup="handleSearch(event)">
+                <button class="clear-btn" onclick="clearSearch()">×</button>
+            </div>
+            <button class="search-btn" onclick="triggerSearch()">検索</button>
             <div id="suggestions" class="suggestions"></div>
         </div>
     </div>
 
-    <div class="main-content">
-        <div id="content-area">
-            <p style="text-align: center; color: #666;">検索バーに単語を入力してください。</p>
+    <div class="main-content" id="mainContent">
+        <div class="welcome-view" id="welcomeView">
+            <div class="hero-box">
+                <div class="hero-top">
+                    <h2 class="hero-title">簡単辞典 WEB</h2>
+                    <h3 class="hero-subtitle">Easy Web Dictionary</h3>
+                </div>
+                <div class="hero-bottom">
+                    知りたい単語だけ検索！わかりやすくて短い説明ですぐわかる！
+                </div>
+            </div>
+
+            <div class="how-to-section">
+                <div class="how-to-header">
+                    <div class="how-to-icon-block"></div>
+                    <h4 class="how-to-title">使い方</h4>
+                </div>
+                <p class="how-to-text">
+                    まず、上の検索バーに検索したい単語を入れます。そしたら出てきた候補を選択するか<br>
+                    検索を押すことで検索ができます。あとは、わかりやすいUIと説明ですぐに理解ができるでしょう。
+                </p>
+            </div>
+
+            <div class="footer">
+                © Saito / Github Server and Create by Saito
+            </div>
         </div>
+
+        <div class="search-results-view" id="searchResultsView" style="display: none;"></div>
     </div>
 
     <script src="jpdata.js"></script>
@@ -130,14 +376,13 @@
             if (window.EnData) combinedData = combinedData.concat(window.EnData);
         };
 
-        // 文字のブレ（大文字・全角など）を整える機能
         function cleanText(str) {
             return str.toLowerCase().replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) {
                 return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
             });
         }
 
-        // ① 候補リスト（サジェスト）用のゆるい絞り込み（1文字でも頭文字マッチで先回り表示）
+        // サジェスト用のゆるい絞り込み
         function filterSuggestions(query) {
             if (!query) return [];
             const target = cleanText(query);
@@ -153,7 +398,7 @@
             });
         }
 
-        // ② 本番検索（エンターキー）用の厳格な絞り込み（完全一致のみ合格）
+        // 確定検索用の完全一致絞り込み
         function filterExactSearch(query) {
             if (!query) return [];
             const target = cleanText(query);
@@ -161,20 +406,17 @@
             return combinedData.filter(item => {
                 const word = cleanText(item.word);
                 const romaji = item.romaji ? cleanText(item.romaji).replace(/\s+/g, '') : '';
-
-                // 単語そのもの、またはローマ字（スペースなし）と100%完全一致するか判定
                 return word === target || romaji === target;
             });
         }
 
-        // 入力中のキーボード操作を処理する機能
+        // 入力時のリアルタイム処理
         function handleSearch(e) {
             const query = e.target.value.trim();
 
-            // 【エンターキーが押されたとき】
             if (e.key === 'Enter') {
                 document.getElementById('suggestions').style.display = 'none';
-                performExactSearch(query); // 厳格な完全一致検索を実行
+                performExactSearch(query);
                 return;
             }
 
@@ -185,7 +427,6 @@
                 return;
             }
 
-            // サジェスト候補は、打ち込みのガイドとして1文字からでも柔軟に出す
             const matches = filterSuggestions(query);
             
             if (matches.length > 0) {
@@ -195,14 +436,13 @@
                     div.className = 'suggestion-item';
                     div.textContent = match.word;
                     
-                    // 候補をクリックしたときは、その単語で確定なので直接カードを出す
                     div.onclick = (event) => {
                         event.stopPropagation();
                         const searchInput = document.getElementById('searchInput');
                         searchInput.value = match.word;
                         suggestionsDiv.style.display = 'none';
                         
-                        performExactSearch(match.word); // クリック時は確定検索
+                        performExactSearch(match.word);
                         searchInput.blur();
                     };
                     suggestionsDiv.appendChild(div);
@@ -213,34 +453,55 @@
             }
         }
 
-        // 画面の下に検索結果のカードをドカンと出す機能（完全一致のみ）
+        // 右側の「検索」ボタンが押されたときの処理
+        function triggerSearch() {
+            const query = document.getElementById('searchInput').value.trim();
+            document.getElementById('suggestions').style.display = 'none';
+            performExactSearch(query);
+        }
+
+        // 英訳がタップされたときに自動で検索を実行する関数
+        function searchByEnMeaning(wordText) {
+            const searchInput = document.getElementById('searchInput');
+            // 検索バーの文字を書き換えて検索を実行
+            searchInput.value = wordText;
+            performExactSearch(wordText);
+            // 画面最上部へスムーズにスクロール（ユーザビリティ向上）
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 完全一致検索と画面切り替え
         function performExactSearch(query) {
             if (!query) return;
-            const contentArea = document.getElementById('content-area');
             
-            // 完全一致するデータだけを抽出
+            const welcomeView = document.getElementById('welcomeView');
+            const resultsView = document.getElementById('searchResultsView');
+            
+            // トップページ要素を非表示にして結果要素を表示
+            welcomeView.style.display = 'none';
+            resultsView.style.display = 'block';
+            
             const results = filterExactSearch(query);
-
             let html = '';
             
             if (results.length === 0) {
-                html = `<p style="text-align: center; color: #666;">「${query}」に完全に一致する単語は見つかりませんでした。</p>`;
+                html = `<p style="text-align: center; color: #666; margin-top: 50px;">「${query}」に完全に一致する単語は見つかりませんでした。</p>`;
             } else {
                 html += `<h2 class="search-title">「${query}」の検索結果 …</h2>`;
 
                 results.forEach(item => {
-                    // 英訳データ(en_meaning)が存在する場合の処理
+                    // 英訳データ(en_meaning)が存在する場合、タップ可能なボタン風にして埋め込む
                     let enMeaningHtml = '';
                     if (item.en_meaning) {
-                        enMeaningHtml = `<p class="result-en-meaning">英訳：${item.en_meaning}</p>`;
+                        // 文字列内のシングルクォーテーション等によるJSエラーを防ぐためエスケープ処理
+                        const escapedWord = item.en_meaning.replace(/'/g, "\\'");
+                        enMeaningHtml = `<p class="result-en-meaning">英訳：<span class="clickable-word" onclick="searchByEnMeaning('${escapedWord}')">${item.en_meaning}</span></p>`;
                     }
 
-                    // 例文の表示処理（日本語データ用の箇条書き、または英語の「・」スタイルに対応）
                     let examplesHtml = '';
                     if (item.examples && item.examples.length > 0) {
                         examplesHtml = '<ul class="result-examples">';
                         item.examples.forEach(ex => {
-                            // すでにデータ側に「・」が含まれていない場合のみ「・ 」を付与する
                             const prefix = ex.startsWith('・') ? '' : '・ ';
                             examplesHtml += `<li>${prefix}${ex}</li>`;
                         });
@@ -261,9 +522,17 @@
                 });
             }
 
-            contentArea.innerHTML = html;
+            // フッターを検索結果の下にも表示させる
+            html += `
+                <div class="footer" style="margin-top: 60px;">
+                    © Saito / Github Server and Create by Saito
+                </div>
+            `;
+
+            resultsView.innerHTML = html;
         }
 
+        // 枠外クリックでサジェストを閉じる
         document.addEventListener('click', (e) => {
             const suggestionsDiv = document.getElementById('suggestions');
             const searchInput = document.getElementById('searchInput');
@@ -276,10 +545,14 @@
             resetPage();
         }
 
+        // ロゴクリックやクリア時、初期のHPトップ画面に戻す
         function resetPage() {
             document.getElementById('searchInput').value = '';
             document.getElementById('suggestions').style.display = 'none';
-            document.getElementById('content-area').innerHTML = '<p style="text-align: center; color: #666;">検索バーに単語を入力してください。</p>';
+            
+            document.getElementById('welcomeView').style.display = 'block';
+            document.getElementById('searchResultsView').style.display = 'none';
+            document.getElementById('searchResultsView').innerHTML = '';
         }
     </script>
 </body>
