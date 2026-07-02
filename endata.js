@@ -11,6 +11,17 @@ window.enData = [
             "Thank you so much for helping me out today.（今日は手伝ってくれてありがとうございます！）"
         ]
     },
+    {
+        word: "America",
+        lang: "en",
+        pos: "名詞",
+        type: "場所",
+        romaji: "アメリカ",
+        meaning: "「America」は「アメリカ合衆国（United States of America）」、または北米・南米大陸全体を指す言葉。世界的な経済や文化の中心地として知られている。<br>読み：アメリカ<br>和訳：アメリカ",
+        examples: [
+            "Washington, D.C. is the capital city of America.（ワシントンD.C.はアメリカの首都です。）"
+        ]
+    },
     { 
         word: "Many", 
         lang: "en",
