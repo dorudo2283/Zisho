@@ -558,10 +558,15 @@
             }
         });
 
+        // ｘボタン（クリアボタン）押下時の処理
         function clearSearch() {
-            resetPage();
+            const searchInput = document.getElementById('searchInput');
+            searchInput.value = ''; 
+            document.getElementById('suggestions').style.display = 'none'; 
+            searchInput.focus(); 
         }
 
+        // ロゴクリック時などの完全リセット処理
         function resetPage() {
             document.getElementById('searchInput').value = '';
             document.getElementById('suggestions').style.display = 'none';
