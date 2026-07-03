@@ -12,6 +12,116 @@ window.enData = [
         ]
     },
     {
+        word: "Class",
+        lang: "en",
+        pos: "名詞",
+        type: "集団",
+        romaji: "クラス",
+        meaning: "「Class」は学校の「学級」「クラス」、または「授業」そのものを指す言葉。さらに「階級」や「等級（ファーストクラスなど）」という意味もある。<br>読み：クラス<br>和訳：クラス",
+        examples: [
+            "I have an English class at ten o'clock this morning.（私は今朝の10時に英語の授業があります。）"
+        ]
+    },
+    {
+        word: "by",
+        lang: "en",
+        pos: "前置詞",
+        type: "手段・期限",
+        romaji: "バイ",
+        meaning: "「by」は「〜のそばに」という位置関係や、「〜によって（手段・交通機関）」、「〜までに（期限）」など、何かを行う際の手がかりや限界線を表す言葉。<br>読み：バイ<br>和訳：〜によって",
+        examples: [
+            "He usually goes to the junior high school by bicycle.（彼は普段、自転車で中学校に通っています。）"
+        ]
+    },
+    {
+        word: "we",
+        lang: "en",
+        pos: "代名詞",
+        type: "人物",
+        romaji: "ウィー",
+        meaning: "「we」は、自分を含めた複数の人間を指して「私たちは」「私たちが」と言うときに使う言葉。主語として文章の最初に置かれる。<br>読み：ウィー<br>和訳：私たちは",
+        examples: [
+            "We are planning to play soccer tomorrow afternoon.（私たちは明日の午後、サッカーをする予定です。）"
+        ]
+    },
+    {
+        word: "who",
+        lang: "en",
+        pos: "疑問詞",
+        type: "疑問",
+        romaji: "フー",
+        meaning: "「who」は、人物が誰であるか不確かなときに「誰」「誰が」と尋ねる言葉。疑問文の先頭に置かれるほか、後ろから名詞を詳しく説明する関係代名詞としても使われる。<br>読み：フー<br>和訳：誰",
+        examples: [
+            "Who is that tall man standing near the door?（ドアの近くに立っているあの背の高い男性は誰ですか？）"
+        ]
+    },
+    {
+        word: "and",
+        lang: "en",
+        pos: "接続詞",
+        type: "接続",
+        romaji: "アンド",
+        meaning: "「and」は、単語と単語、または文章と文章を対等に繋いで「〜と…」「そして」という意味を表す言葉。情報を付け足す際に最も基本となる接続詞。<br>読み：アンド<br>和訳：そして",
+        examples: [
+            "I bought an apple and a banana at the store.（私はその店でりんごとバナナを買いました。）"
+        ]
+    },
+    {
+        word: "see",
+        lang: "en",
+        pos: "動詞",
+        type: "行動",
+        romaji: "シー",
+        meaning: "「see」は、目を開けていることで自然と対象が「見える」「目に入る」ことを表す言葉。意識してじっくり見る look や watch と異なり、受動的に視界に入るニュアンスがある。「理解する（I see.）」という意味でもよく使われる。<br>読み：シー<br>和訳：見る",
+        examples: [
+            "Can you see the beautiful birds on the tree?（木の上にいる美しい鳥たちが見えますか？）"
+        ]
+    },
+    {
+        word: "global",
+        lang: "en",
+        pos: "形容詞",
+        type: "属性",
+        romaji: "グローバル",
+        meaning: "「global」は「地球全体の」「世界規模の」という意味を持つ言葉。地球を意味する globe から派生しており、世界全体を一つとして捉える表現に使われる。<br>読み：グローバル<br>和訳：グローバル",
+        examples: [
+            "Global warming is a serious problem for everyone.（地球温暖化はすべての人にとって深刻な問題です。）"
+        ]
+    },
+    {
+        word: "win",
+        lang: "en",
+        pos: "動詞",
+        type: "勝負",
+        romaji: "ウィン",
+        meaning: "「win」は、試合、ゲーム、選挙、戦争などで「勝つ」「勝利を収める」、または賞などを「獲得する」という意味の言葉。対義語は lose。<br>読み：ウィン<br>和訳：勝つ",
+        examples: [
+            "Our team worked hard to win the soccer game today.（私たちのチームは、今日のサッカーの試合に勝つために懸命に努力しました。）"
+        ]
+    },
+    {
+        word: "lose",
+        lang: "en",
+        pos: "動詞",
+        type: "勝負",
+        romaji: "ルーズ",
+        meaning: "「lose」は、勝負事で「負ける」、または鍵や財布などの持ち物を「失う」「なくす」という意味を持つ言葉。対義語は win。<br>読み：ルーズ<br>和訳：負ける",
+        examples: [
+            "I don't want to lose my favorite dictionary.（お気に入りの辞典をなくしたくありません。）"
+        ]
+    },
+    {
+        word: "for",
+        lang: "en",
+        pos: "前置詞",
+        type: "目的・対象",
+        romaji: "フォー",
+        meaning: "「for」は、行動の向かう先や目的、あるいは利益の対象を表して「〜のために」「〜に向かって」という意味を表す言葉。誰かへのプレゼントや、特定の目的地を示すときによく使われる。<br>読み：フォー<br>和訳：〜のために",
+        examples: [
+            "This beautiful flower is a present for my mother.（この美しい花は、私の母へのプレゼントです。）"
+        ]
+    },
+    {
         word: "He",
         lang: "en",
         pos: "代名詞",
