@@ -12,6 +12,94 @@ window.enData = [
         ]
     },
     {
+        word: "He",
+        lang: "en",
+        pos: "代名詞",
+        type: "人物",
+        romaji: "ヒー",
+        meaning: "「He」は、前に話題に出た男性の1人を指して「彼は」「彼が」と言うときに使う言葉。主語として文章の最初に置かれる。<br>読み：ヒー<br>和訳：彼は",
+        examples: [
+            "He is a junior high school student and likes soccer.（彼は中学生で、サッカーが好きです。）"
+        ]
+    },
+    {
+        word: "She",
+        lang: "en",
+        pos: "代名詞",
+        type: "人物",
+        romaji: "シー",
+        meaning: "「She」は、前に話題に出た女性の1人を指して「彼女は」「彼女が」と言うときに使う言葉。主語として文章の最初に置かれる。<br>読み：シー<br>和訳：彼女は",
+        examples: [
+            "She speaks Japanese and English very well.（彼女は日本語と英語をとても上手に話します。）"
+        ]
+    },
+    {
+        word: "In",
+        lang: "en",
+        pos: "前置詞",
+        type: "場所",
+        romaji: "イン",
+        meaning: "「In」は、箱や部屋、国など「〜の中に」「〜において」という広い空間の内部にすっぽり入っている状態を表す言葉。<br>読み：イン<br>和訳：中に",
+        examples: [
+            "There are many apples in the box.（箱の中にはたくさんのりんごがあります。）"
+        ]
+    },
+    {
+        word: "On",
+        lang: "en",
+        pos: "前置詞",
+        type: "場所",
+        romaji: "オン",
+        meaning: "「On」は、机や壁、床など「〜の上に」ある状態を表す言葉。単に上にあるだけでなく、何かの表面に「接触している」ことが重要なポイント。<br>読み：オン<br>和訳：上に",
+        examples: [
+            "Your notebook is on the teacher's desk.（あなたのノートは先生の机の上にあります。）"
+        ]
+    },
+    {
+        word: "Under",
+        lang: "en",
+        pos: "前置詞",
+        type: "場所",
+        romaji: "アンダー",
+        meaning: "「Under」は、机や木などの「〜の下に」「〜の真下に」ある状態を表す言葉。何かに覆われているニュアンスを持つ。<br>読み：アンダー<br>和訳：下に",
+        examples: [
+            "A cute cat is sleeping under the table.（可愛い猫がテーブルの下で眠っています。）"
+        ]
+    },
+    {
+        word: "Near",
+        lang: "en",
+        pos: "前置詞",
+        type: "場所",
+        romaji: "ニア",
+        meaning: "「Near」は、距離が「〜の近くに」ある状態を表す言葉。対義語は far。<br>読み：ニア<br>和訳：近くに",
+        examples: [
+            "My house is near the school, so I walk every day.（私の家は学校の近くにあるので、毎日歩いています。）"
+        ]
+    },
+    {
+        word: "What",
+        lang: "en",
+        pos: "疑問詞",
+        type: "疑問",
+        romaji: "ワット",
+        meaning: "「What」は、わからない物や事柄について「何」「何を」と尋ねるときに使う言葉。尋ねたい情報の核心を突くために、文の先頭に置かれる。<br>読み：ワット<br>和訳：何",
+        examples: [
+            "What is this? - It is a dictionary.（これは何ですか？ - それは辞典です。）"
+        ]
+    },
+    {
+        word: "How",
+        lang: "en",
+        pos: "疑問詞",
+        type: "疑問",
+        romaji: "ハウ",
+        meaning: "「How」は、状態や気分が「どう」「どのように」であるか、または手段や方法を尋ねるときに使う言葉。挨拶でも非常によく使われる。<br>読み：ハウ<br>和訳：どのように",
+        examples: [
+            "How are you today? - I am fine, thank you.（今日の調子はどうですか？ - 元気です、ありがとう。）"
+        ]
+    },
+    {
         word: "Japanese",
         lang: "en",
         pos: "名詞",
