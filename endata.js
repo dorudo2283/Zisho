@@ -12,6 +12,17 @@ window.enData = [
         ]
     },
     {
+        word: "Japanese",
+        lang: "en",
+        pos: "名詞",
+        type: "属性",
+        romaji: "ジャパニーズ",
+        meaning: "「Japanese」は「日本人」「日本語」、または「日本の」「日本独特の」という意味を持つ言葉。国や言語、文化的な属性を表す際に広く使われる。<br>読み：ジャパニーズ<br>和訳：日本語",
+        examples: [
+            "Many people around the world are studying Japanese.（世界中の多くの人々が日本語を勉強しています。）"
+        ]
+    },
+    {
         word: "America",
         lang: "en",
         pos: "名詞",
