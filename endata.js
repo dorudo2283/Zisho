@@ -11,6 +11,347 @@ window.enData = [
         ]
     },
     {
+        word: "Front",
+        lang: "en",
+        pos: "名詞・形容詞",
+        type: "場所",
+        romaji: "フロント",
+        meaning: "「Front」は「前部」「正面」を表す言葉。中学英語では「in front of 〜」の形で「〜の前に」という意味で非常によく使われる。<br>読み：フロント<br>和訳：正面",
+        examples: [
+            "There is a big tree in front of our school.（私たちの学校の前に大きな木があります。）"
+        ]
+    },
+    {
+        word: "Be",
+        lang: "en",
+        pos: "動詞",
+        type: "状態",
+        romaji: "ビー",
+        meaning: "「Be」は am, is, are などの「be動詞」の原形（元の形）。「〜である」「（場所に）ある、いる」という存在や状態を表す。命令文（Be careful. など）や助動詞の後ろでこの形になる。<br>読み：ビー<br>和訳：ある",
+        examples: [
+            "Please be quiet in the classroom.（教室では静かにしてください。）"
+        ]
+    },
+    {
+        word: "Of",
+        lang: "en",
+        pos: "前置詞",
+        type: "関係",
+        romaji: "オブ",
+        meaning: "「Of」は「〜の」という所属や一部を表したり、「〜の中で」という範囲を表す言葉。熟語（in front of や a lot of など）の一部としても頻出する。<br>読み：オブ<br>和訳：〜の",
+        examples: [
+            "He is a member of the soccer club.（彼はサッカー部の部員です。）"
+        ]
+    },
+    {
+        word: "Some",
+        lang: "en",
+        pos: "形容詞・代名詞",
+        type: "数量",
+        romaji: "サム",
+        meaning: "「Some」は、はっきりとした数はわからないけれど「いくつかの」「いくらかの」と表現したいときに使う言葉。主に肯定文（普通の文）で使われる。<br>読み：サム<br>和訳：いくつかの",
+        examples: [
+            "I have some English dictionaries in my room.（私は部屋にいくつかの英語の辞典を持っています。）"
+        ]
+    },
+    {
+        word: "Lot",
+        lang: "en",
+        pos: "名詞",
+        type: "数量",
+        romaji: "ロット",
+        meaning: "「Lot」は単体では「たくさんの量」を表す名詞。中学英語では「a lot of 〜」や「lots of 〜」の形で「たくさんの〇〇」という表現で毎日レベルで使う重要ワード。<br>読み：ロット<br>和訳：たくさん",
+        examples: [
+            "A lot of students enjoy playing soccer after school.（たくさんの生徒が放課後にサッカーをすることを楽しんでいます。）"
+        ]
+    },
+    {
+        word: "They",
+        lang: "en",
+        pos: "代名詞",
+        type: "人物・物体",
+        romaji: "ゼイ",
+        meaning: "「They」は、前に出た2人以上の人間や、2つ以上の物を指して「彼らは」「彼女らは」「それらは」と言うときに使う言葉。主語として文章の最初に置かれる。<br>読み：ゼイ<br>和訳：彼らは",
+        examples: [
+            "They are high school students and speak Japanese well.（彼らは高校生で、日本語を上手に話します。）"
+        ]
+    },
+    {
+        word: "Visit",
+        lang: "en",
+        pos: "動詞",
+        type: "行動",
+        romaji: "ヴィジット",
+        meaning: "「Visit」は、人や場所を「訪問する」「訪ねる」「（観光地などに）遊びに行く」という意味の言葉。ただ行く（go）だけでなく、目的を持って訪れるニュアンスがある。<br>読み：ヴィジット<br>和訳：訪れる",
+        examples: [
+            "I want to visit America with my family next year.（私は来年、家族と一緒にアメリカを訪れたいです。）"
+        ]
+    },
+    {
+        word: "Noon",
+        lang: "en",
+        pos: "名詞",
+        type: "時間",
+        romaji: "ヌーン",
+        meaning: "「Noon」は「正午」「お昼の12時」をぴったり指す言葉。「at noon」で「正午に（お昼に）」という意味になる。<br>読み：ヌーン<br>和訳：正午",
+        examples: [
+            "We usually eat lunch at noon.（私たちは普段、正午にお昼ご飯を食べます。）"
+        ]
+    },
+    {
+        word: "Like",
+        lang: "en",
+        pos: "動詞・前置詞",
+        type: "感情・状態",
+        romaji: "ライク",
+        meaning: "「Like」は、動詞として「〜が好きである」という意味のほか、前置詞として「〜のような」「〜のように」という意味も持つ、中学英語の超必須単語。<br>読み：ライク<br>和訳：好き",
+        examples: [
+            "I like English and Japanese classes very much.（私は英語と日本語の授業がとても好きです。）"
+        ]
+    },
+    {
+        word: "Nervous",
+        lang: "en",
+        pos: "形容詞",
+        type: "感情",
+        romaji: "ナーヴァス",
+        meaning: "「Nervous」は、テストの前や発表の前などに「緊張している」「ハラハラしている」「不安な」状態を表す言葉。<br>読み：ナーヴァス<br>和訳：緊張して",
+        examples: [
+            "He was very nervous before the soccer game.（彼はサッカーの試合の前、とても緊張していました。）"
+        ]
+    },
+    {
+        word: "Worry",
+        lang: "en",
+        pos: "動詞",
+        type: "感情",
+        romaji: "ウォリー",
+        meaning: "「Worry」は「心配する」「気をもむ」という意味の言葉。「Don't worry.」で「心配しないで」「気にするなよ」という定番の励ましフレーズになる。<br>読み：ウォリー<br>和訳：心配する",
+        examples: [
+            "Don't worry about the small mistakes!（小さなミスなんて心配するな！）"
+        ]
+    },
+    {
+        word: "You",
+        lang: "en",
+        pos: "代名詞",
+        type: "人物",
+        romaji: "ユー",
+        meaning: "「You」は、話し相手に対して「あなたは」「あなたたちが」「あなたを」と言うときに使う言葉。相手が1人のときも、複数のときも同じ You を使う。<br>読み：ユー<br>和訳：あなたは",
+        examples: [
+            "You are a very kind junior high school student.（あなたはとても親切な中学生です。）"
+        ]
+    },
+    {
+        word: "Your",
+        lang: "en",
+        pos: "代名詞",
+        type: "人物",
+        romaji: "ユア",
+        meaning: "「Your」は「あなたの」「あなたたちの」という、相手の所有を表す言葉。後ろに必ず名詞（物や人など）がくっつく。<br>読み：ユア<br>和訳：あなたの",
+        examples: [
+            "What is your favorite subject in school?（学校でのあなたの好きな教科は何ですか？）"
+        ]
+    },
+    {
+        word: "Yourself",
+        lang: "en",
+        pos: "代名詞",
+        type: "人物",
+        romaji: "ユアセルフ",
+        meaning: "「Yourself」は「あなた自身」を表す言葉。「By yourself」で「あなた1人で（単独で）」という意味や、「Enjoy yourself」で「楽しんでね」というフレーズでよく使われる。<br>読み：ユアセルフ<br>和訳：あなた自身",
+        examples: [
+            "Please take care of yourself.（あなた自身のお体を大切にしてくださいね。）"
+        ]
+    },
+    {
+        word: "Self",
+        lang: "en",
+        pos: "名詞",
+        type: "概念",
+        romaji: "セルフ",
+        meaning: "「Self」は「自分」「自己」「本来の自分」を表す言葉。日本語でも「セルフサービス」などでお馴染み。多くは yourself や myself のように他の語の後ろにくっつく。<br>読み：セルフ<br>和訳：自分",
+        examples: [
+            "It is important to understand your true self.（本当の自分を理解することは大切です。）"
+        ]
+    },
+    {
+        word: "Right",
+        lang: "en",
+        pos: "名詞・副詞・形容詞",
+        type: "方向・状態",
+        romaji: "ライト",
+        meaning: "「Right」は、道案内などで使う「右」「右に」という意味のほか、「正しい（That's right.）」という意味も持つ、非常に使用頻度の高い言葉。<br>読み：ライト<br>和訳：右",
+        examples: [
+            "Turn right at the next corner, please.（次の角を右に曲がってください。）"
+        ]
+    },
+    {
+        word: "Left",
+        lang: "en",
+        pos: "名詞・副詞・形容詞",
+        type: "方向",
+        romaji: "レフト",
+        meaning: "「Left」は、道案内などで使う「左」「左に」という意味の言葉。対義語は right。※動詞 leave（去る）の過去形でもある。<br>読み：レフト<br>和訳：左",
+        examples: [
+            "The station is on your left.（駅はあなたの左側にあります。）"
+        ]
+    },
+    {
+        word: "Turn",
+        lang: "en",
+        pos: "動詞",
+        type: "行動",
+        romaji: "ターン",
+        meaning: "「Turn」は、体や方向を「曲がる」「回転する」「向きを変える」という意味の言葉。道案内で「Turn right（右に曲がる）」などの形で頻出する。<br>読み：ターン<br>和訳：曲がる",
+        examples: [
+            "Please turn left at the traffic light.（信号のところで左に曲がってください。）"
+        ]
+    },
+    {
+        word: "Please",
+        lang: "en",
+        pos: "副詞",
+        type: "表現",
+        romaji: "プリーズ",
+        meaning: "「Please」は、命令文の前や後ろにつけて「どうか〜してください」と、丁寧にお願いをするときに使う言葉。<br>読み：プリーズ<br>和訳：どうぞ",
+        examples: [
+            "Please show me your English notebook.（あなたの英語のノートを私に見せてください。）"
+        ]
+    },
+    {
+        word: "Look",
+        lang: "en",
+        pos: "動詞",
+        type: "行動",
+        romaji: "ルック",
+        meaning: "「Look」は、特定の対象に視線を向けて「見る」という意味の言葉。「Look at 〜」で「〜を見る」という熟語として非常によく使われる。自然と目に入る see と違い、意識して見るニュアンス。<br>読み：ルック<br>和訳：見る",
+        examples: [
+            "Look at the picture on the wall, please.（壁の上の絵を見てください。）"
+        ]
+    },
+    {
+        word: "Enjoy",
+        lang: "en",
+        pos: "動詞",
+        type: "感情",
+        romaji: "エンジョイ",
+        meaning: "「Enjoy」は、スポーツや授業、イベントなどを「楽しむ」「満喫する」という意味の言葉。後ろに動詞を置くときは `~ing` の形（動名詞）にするルールがある。<br>読み：エンジョイ<br>和訳：楽しむ",
+        examples: [
+            "We really enjoy studying English together every day.（私たちは毎日一緒に英語を勉強することを本当に楽しんでいます。）"
+        ]
+    },
+    {
+        word: "One",
+        lang: "en",
+        pos: "名詞・代名詞",
+        type: "数詞",
+        romaji: "ワン",
+        meaning: "数の「1」「1つの」を表す言葉。また、前に出た名詞の代わりに「（1つの）それ、もの」を指す代名詞としても非常によく使われる。<br>読み：ワン<br>和訳：1つ",
+        examples: [
+            "I have one sister and two brothers.（私には1人の姉妹と2人の兄弟がいます。）"
+        ]
+    },
+    {
+        word: "Two",
+        lang: "en",
+        pos: "名詞",
+        type: "数詞",
+        romaji: "トゥー",
+        meaning: "数の「2」「2つの」を表す言葉。後ろにくる数えられる名詞の末尾には、複数形の「s」をつける必要がある。<br>読み：トゥー<br>和訳：2つ",
+        examples: [
+            "He bought two dictionaries yesterday.（彼は昨日、2冊の辞典を買いました。）"
+        ]
+    },
+    {
+        word: "Three",
+        lang: "en",
+        pos: "名詞",
+        type: "数詞",
+        romaji: "スリー",
+        meaning: "数の「3」「3つの」を表す言葉。後ろに名詞を置く場合は複数形にする。<br>読み：スリー<br>和訳：3つ",
+        examples: [
+            "There are three cats under the table.（テーブルの下に3匹の猫がいます。）"
+        ]
+    },
+    {
+        word: "Four",
+        lang: "en",
+        pos: "名詞",
+        type: "数詞",
+        romaji: "フォー",
+        meaning: "数の「4」「4つの」を表す言葉。後ろに名詞を置く場合は複数形にする。<br>読み：フォー<br>和訳：4つ",
+        examples: [
+            "A year has four seasons: spring, summer, autumn, and winter.（1年には春、夏、秋、冬の4つの季節があります。）"
+        ]
+    },
+    {
+        word: "Five",
+        lang: "en",
+        pos: "名詞",
+        type: "数詞",
+        romaji: "ファイブ",
+        meaning: "数の「5」「5つの」を表す言葉。後ろに名詞を置く場合は複数形にする。<br>読み：ファイブ<br>和訳：5つ",
+        examples: [
+            "I have five classes every Monday.（私は毎週月曜日に5つの授業があります。）"
+        ]
+    },
+    {
+        word: "Six",
+        lang: "en",
+        pos: "名詞",
+        type: "数詞",
+        romaji: "シックス",
+        meaning: "数の「6」「6つの」を表す言葉。後ろに名詞を置く場合は複数形にする。<br>読み：シックス<br>和訳：6つ",
+        examples: [
+            "School starts at eight and finishes at six.（学校は8時に始まり、6時に終わります。）"
+        ]
+    },
+    {
+        word: "Seven",
+        lang: "en",
+        pos: "名詞",
+        type: "数詞",
+        romaji: "セブン",
+        meaning: "数の「7」「7つの」を表す言葉。後ろに名詞を置く場合は複数形にする。<br>読み：セブン<br>和訳：7つ",
+        examples: [
+            "There are seven days in a week.（1週間には7つの日があります。）"
+        ]
+    },
+    {
+        word: "Eight",
+        lang: "en",
+        pos: "名詞",
+        type: "数詞",
+        romaji: "エイト",
+        meaning: "数の「8」「8つの」を表す言葉。後ろに名詞を置く場合は複数形にする。<br>読み：エイト slide<br>和訳：8つ",
+        examples: [
+            "He usually gets up at eight o'clock.（彼は普段、8時に起きます。）"
+        ]
+    },
+    {
+        word: "Nine",
+        lang: "en",
+        pos: "名詞",
+        type: "数詞",
+        romaji: "ナイン",
+        meaning: "数の「9」「9つの」を表す言葉。後ろに名詞を置く場合は複数形にする。<br>読み：ナイン<br>和訳：9つ",
+        examples: [
+            "My baseball team has nine players.（私の野球チームには9人の選手がいます。）"
+        ]
+    },
+    {
+        word: "Ten",
+        lang: "en",
+        pos: "名詞",
+        type: "数詞",
+        romaji: "テン",
+        meaning: "数の「10」「10つの」を表す言葉。後ろに名詞を置く場合は複数形にする。<br>読み：テン<br>和訳：10つ",
+        examples: [
+            "I studied English for ten hours this week.（私は今週、10時間英語を勉強しました。）"
+        ]
+    },
+    {
         word: "Class",
         lang: "en",
         pos: "名詞",
