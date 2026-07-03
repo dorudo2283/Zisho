@@ -23,7 +23,7 @@ window.enData = [
         ]
     },
     {
-        word: "by",
+        word: "By",
         lang: "en",
         pos: "前置詞",
         type: "手段・期限",
@@ -34,7 +34,7 @@ window.enData = [
         ]
     },
     {
-        word: "we",
+        word: "We",
         lang: "en",
         pos: "代名詞",
         type: "人物",
@@ -45,7 +45,7 @@ window.enData = [
         ]
     },
     {
-        word: "who",
+        word: "Who",
         lang: "en",
         pos: "疑問詞",
         type: "疑問",
@@ -56,7 +56,7 @@ window.enData = [
         ]
     },
     {
-        word: "and",
+        word: "And",
         lang: "en",
         pos: "接続詞",
         type: "接続",
@@ -67,7 +67,7 @@ window.enData = [
         ]
     },
     {
-        word: "see",
+        word: "See",
         lang: "en",
         pos: "動詞",
         type: "行動",
@@ -78,7 +78,7 @@ window.enData = [
         ]
     },
     {
-        word: "global",
+        word: "Global",
         lang: "en",
         pos: "形容詞",
         type: "属性",
@@ -89,7 +89,7 @@ window.enData = [
         ]
     },
     {
-        word: "win",
+        word: "Win",
         lang: "en",
         pos: "動詞",
         type: "勝負",
@@ -100,18 +100,18 @@ window.enData = [
         ]
     },
     {
-        word: "lose",
+        word: "Lose",
         lang: "en",
         pos: "動詞",
         type: "勝負",
         romaji: "ルーズ",
-        meaning: "「lose」は、勝負事で「負ける」、または鍵や財布などの持ち物を「失う」「なくす」という意味を持つ言葉。対義語は win。<br>読み：ルーズ<br>和訳：負ける",
+        meaning: "「lose」は、勝負事で「負ける」、または鍵や財布などの持ち物を「失う」「なくす」という意味を持つ言葉。対義語は win。<br>読み：ロス<br>和訳：負ける",
         examples: [
             "I don't want to lose my favorite dictionary.（お気に入りの辞典をなくしたくありません。）"
         ]
     },
     {
-        word: "for",
+        word: "For",
         lang: "en",
         pos: "前置詞",
         type: "目的・対象",
