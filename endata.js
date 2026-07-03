@@ -1,4 +1,3 @@
-
 window.enData = [
     { 
         word: "Thank you", 
