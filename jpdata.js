@@ -41,7 +41,7 @@ window.jpData = [
         ]
     },
     {
-        word: "〜の",
+        word: "～の",
         lang: "jp",
         pos: "助詞",
         type: "関係",
