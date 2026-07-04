@@ -29,6 +29,7 @@
 
         .logo-container {
             cursor: pointer;
+            flex-shrink: 0;
         }
 
         .logo-main {
@@ -50,6 +51,7 @@
             align-items: center;
             width: 100%;
             max-width: 500px;
+            margin-left: 20px;
         }
 
         .search-wrapper {
@@ -64,9 +66,9 @@
             width: 100%;
             padding: 12px 35px 12px 15px;
             border: none;
-            font-size: 14px;
+            font-size: 16px; /* スマホでの自動ズームを防止するため16px以上に修正 */
             outline: none;
-            color: #333;
+            color: #33;
         }
 
         /* プレースホルダーの文字色を少し薄めに */
@@ -313,6 +315,44 @@
         .result-examples li {
             margin-bottom: 5px;
         }
+
+        /* --- スマートフォン向けのレスポンシブ調整 --- */
+        @media screen and (max-width: 600px) {
+            .navbar {
+                padding: 15px 20px;
+                flex-direction: column; /* 縦並びにして要素間の衝突を防ぐ */
+                align-items: stretch;
+            }
+
+            .logo-container {
+                text-align: center;
+                margin-bottom: 10px; /* 検索バーとの縦の隙間を確保 */
+            }
+
+            .search-container {
+                margin-left: 0;
+                max-width: 100%;
+            }
+
+            /* スマホでのヒーロータイトルの文字サイズ調整 */
+            .hero-title {
+                font-size: 40px;
+            }
+            .hero-subtitle {
+                font-size: 22px;
+            }
+            
+            /* スマホでのカード内余白調整 */
+            .dictionary-card {
+                padding: 25px 20px;
+            }
+            .main-word {
+                font-size: 28px;
+            }
+            .pos-tag {
+                font-size: 24px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -324,7 +364,7 @@
         </div>
         <div class="search-container">
             <div class="search-wrapper">
-                <input type="text" id="searchInput" class="search-bar" placeholder="検索したい言葉を入力してください" onkeyup="handleSearch(event)">
+                <input type="text" id="searchInput" class="search-bar" placeholder="単語を入力" onkeyup="handleSearch(event)">
                 <button class="clear-btn" onclick="clearSearch()">×</button>
             </div>
             <button class="search-btn" onclick="triggerSearch()">検索</button>
