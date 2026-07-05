@@ -64,11 +64,11 @@
 
         .search-bar {
             width: 100%;
-            padding: 12px 35px 12px 15px;
+            padding: 12px 45px 12px 15px; /* クリアボタンが大きくなったため、文字が被らないよう右余白を35pxから45pxに調整 */
             border: none;
             font-size: 16px; /* スマホでの自動ズームを防止するため16px以上に修正 */
             outline: none;
-            color: #33;
+            color: #333;
         }
 
         /* プレースホルダーの文字色を少し薄めに */
@@ -76,15 +76,22 @@
             color: #757575;
         }
 
+        /* 【修正箇所】クリアボタン（×）のサイズとクリック領域の拡大 */
         .clear-btn {
             position: absolute;
-            right: 10px;
+            right: 0;                  /* 右端にぴったり配置 */
+            top: 0;                    /* 上端にぴったり配置 */
+            height: 100%;              /* 検索窓の高さ一杯に広げる */
+            width: 44px;               /* タップしやすい適切な幅（44px）を確保 */
             background: none;
             border: none;
-            font-size: 16px;
+            font-size: 22px;           /* バツ印の視認性を高めるため、16pxから22pxに拡大 */
             cursor: pointer;
             color: #999;
             padding: 0;
+            display: flex;             /* 縦横の中央にバツ印を配置 */
+            align-items: center;
+            justify-content: center;
         }
 
         .search-btn {
